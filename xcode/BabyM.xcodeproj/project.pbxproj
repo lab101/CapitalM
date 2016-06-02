@@ -1,0 +1,455 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		006D720419952D00008149E2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 006D720219952D00008149E2 /* AVFoundation.framework */; };
+		006D720519952D00008149E2 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 006D720319952D00008149E2 /* CoreMedia.framework */; };
+		0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0091D8F80E81B9330029341E /* OpenGL.framework */; };
+		00B784B30FF439BC000DE1D7 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784AF0FF439BC000DE1D7 /* Accelerate.framework */; };
+		00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */; };
+		00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
+		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
+		00B9955A1B128DF400A5C623 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995581B128DF400A5C623 /* IOKit.framework */; };
+		00B9955B1B128DF400A5C623 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995591B128DF400A5C623 /* IOSurface.framework */; };
+		09BD164CA3CF4D0081FEDE88 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = D7AB660B27C74F30BC929D31 /* CinderApp.icns */; };
+		502379931CFD9CCC00ADF4E2 /* Dot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 502379911CFD9CCC00ADF4E2 /* Dot.cpp */; };
+		502379961CFD9EDE00ADF4E2 /* Emitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 502379941CFD9EDE00ADF4E2 /* Emitter.cpp */; };
+		5023799C1CFE07D700ADF4E2 /* TestSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5023799A1CFE07D700ADF4E2 /* TestSet.cpp */; };
+		5023799F1CFE2FA900ADF4E2 /* EmmiterData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5023799D1CFE2FA900ADF4E2 /* EmmiterData.cpp */; };
+		504EEF547D994D31A0C525BE /* nanovg.c in Sources */ = {isa = PBXBuildFile; fileRef = 22C51CA246284AC7B5372448 /* nanovg.c */; };
+		50675AC71CFF8B7000D700E9 /* TextRender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50675AC51CFF8B7000D700E9 /* TextRender.cpp */; };
+		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
+		739F476853954198955582BA /* BabyMApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27FB0846D0BF45B7BF3A7BC8 /* BabyMApp.cpp */; };
+		757D743C291A4AA0B0BA749F /* ci_nanovg_gl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E0A887101A1946E59A345AB0 /* ci_nanovg_gl.cpp */; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		A16D6765E4DC436EA28E0912 /* SvgRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C54A1500A9BD41C7842C49DB /* SvgRenderer.cpp */; };
+		C70B723309274C21944F9010 /* ci_nanovg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 239FA529EC154D5FB8919201 /* ci_nanovg.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		006D720219952D00008149E2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		006D720319952D00008149E2 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		0091D8F80E81B9330029341E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		00B784AF0FF439BC000DE1D7 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		00B784B10FF439BC000DE1D7 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
+		00B784B20FF439BC000DE1D7 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		00B995581B128DF400A5C623 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		00B995591B128DF400A5C623 /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		120091FBA3FE46FEA194EABE /* ci_nanovg.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = ci_nanovg.hpp; path = ../blocks/NanoVG/include/ci_nanovg.hpp; sourceTree = "<group>"; };
+		160791FFFCEE4BE291766112 /* nanovg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = nanovg.h; path = ../blocks/NanoVG/deps/nanovg/src/nanovg.h; sourceTree = "<group>"; };
+		22C51CA246284AC7B5372448 /* nanovg.c */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = nanovg.c; path = ../blocks/NanoVG/deps/nanovg/src/nanovg.c; sourceTree = "<group>"; };
+		239FA529EC154D5FB8919201 /* ci_nanovg.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = ci_nanovg.cpp; path = ../blocks/NanoVG/src/ci_nanovg.cpp; sourceTree = "<group>"; };
+		27FB0846D0BF45B7BF3A7BC8 /* BabyMApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = BabyMApp.cpp; path = ../src/BabyMApp.cpp; sourceTree = "<group>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		3A7095F42D794D5AAB6AC01C /* stb_truetype.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stb_truetype.h; path = ../blocks/NanoVG/deps/nanovg/src/stb_truetype.h; sourceTree = "<group>"; };
+		502379911CFD9CCC00ADF4E2 /* Dot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Dot.cpp; path = ../src/Dot.cpp; sourceTree = "<group>"; };
+		502379921CFD9CCC00ADF4E2 /* Dot.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Dot.hpp; path = ../src/Dot.hpp; sourceTree = "<group>"; };
+		502379941CFD9EDE00ADF4E2 /* Emitter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Emitter.cpp; path = ../src/Emitter.cpp; sourceTree = "<group>"; };
+		502379951CFD9EDE00ADF4E2 /* Emitter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Emitter.hpp; path = ../src/Emitter.hpp; sourceTree = "<group>"; };
+		5023799A1CFE07D700ADF4E2 /* TestSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSet.cpp; path = ../src/TestSet.cpp; sourceTree = "<group>"; };
+		5023799B1CFE07D700ADF4E2 /* TestSet.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = TestSet.hpp; path = ../src/TestSet.hpp; sourceTree = "<group>"; };
+		5023799D1CFE2FA900ADF4E2 /* EmmiterData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EmmiterData.cpp; path = ../src/EmmiterData.cpp; sourceTree = "<group>"; };
+		5023799E1CFE2FA900ADF4E2 /* EmmiterData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = EmmiterData.hpp; path = ../src/EmmiterData.hpp; sourceTree = "<group>"; };
+		50675AC51CFF8B7000D700E9 /* TextRender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextRender.cpp; path = ../src/TextRender.cpp; sourceTree = "<group>"; };
+		50675AC61CFF8B7000D700E9 /* TextRender.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = TextRender.hpp; path = ../src/TextRender.hpp; sourceTree = "<group>"; };
+		50675AC81CFF8BEC00D700E9 /* Singleton.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Singleton.hpp; path = ../src/Singleton.hpp; sourceTree = "<group>"; };
+		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
+		8BD46255C79C419D8CBBA374 /* BabyM_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = BabyM_Prefix.pch; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* BabyM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BabyM.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1051C0ACFAC4492A563B9A8 /* SvgRenderer.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = SvgRenderer.hpp; path = ../blocks/NanoVG/include/SvgRenderer.hpp; sourceTree = "<group>"; };
+		AE56D50D9CCB4546B9978638 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C54A1500A9BD41C7842C49DB /* SvgRenderer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = SvgRenderer.cpp; path = ../blocks/NanoVG/src/SvgRenderer.cpp; sourceTree = "<group>"; };
+		D7AB660B27C74F30BC929D31 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
+		E0A887101A1946E59A345AB0 /* ci_nanovg_gl.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = ci_nanovg_gl.cpp; path = ../blocks/NanoVG/src/ci_nanovg_gl.cpp; sourceTree = "<group>"; };
+		EDFC6EE9E4C34EDEAD49A0F8 /* nanovg_gl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = nanovg_gl.h; path = ../blocks/NanoVG/deps/nanovg/src/nanovg_gl.h; sourceTree = "<group>"; };
+		EEE7E2AD76224A189777C052 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
+		FAB9EE1C30B5480AA39918DC /* ci_nanovg_gl.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = ci_nanovg_gl.hpp; path = ../blocks/NanoVG/include/ci_nanovg_gl.hpp; sourceTree = "<group>"; };
+		FDDFF65F353A427F9C4438DA /* fontstash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = fontstash.h; path = ../blocks/NanoVG/deps/nanovg/src/fontstash.h; sourceTree = "<group>"; };
+		FE7B5CEE01FF46D7A8692AD5 /* nanovg_gl_utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = nanovg_gl_utils.h; path = ../blocks/NanoVG/deps/nanovg/src/nanovg_gl_utils.h; sourceTree = "<group>"; };
+		FEA94C41024C48009E0DF400 /* stb_image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = stb_image.h; path = ../blocks/NanoVG/deps/nanovg/src/stb_image.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				006D720419952D00008149E2 /* AVFoundation.framework in Frameworks */,
+				006D720519952D00008149E2 /* CoreMedia.framework in Frameworks */,
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */,
+				5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */,
+				00B784B30FF439BC000DE1D7 /* Accelerate.framework in Frameworks */,
+				00B784B40FF439BC000DE1D7 /* AudioToolbox.framework in Frameworks */,
+				00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */,
+				00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */,
+				00B9955A1B128DF400A5C623 /* IOKit.framework in Frameworks */,
+				00B9955B1B128DF400A5C623 /* IOSurface.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		01B97315FEAEA392516A2CEA /* Blocks */ = {
+			isa = PBXGroup;
+			children = (
+				55920FDAF50B40C4BFEE433B /* NanoVG */,
+			);
+			name = Blocks;
+			sourceTree = "<group>";
+		};
+		080E96DDFE201D6D7F000001 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				50675AC81CFF8BEC00D700E9 /* Singleton.hpp */,
+				50675AC51CFF8B7000D700E9 /* TextRender.cpp */,
+				50675AC61CFF8B7000D700E9 /* TextRender.hpp */,
+				27FB0846D0BF45B7BF3A7BC8 /* BabyMApp.cpp */,
+				502379911CFD9CCC00ADF4E2 /* Dot.cpp */,
+				502379921CFD9CCC00ADF4E2 /* Dot.hpp */,
+				502379941CFD9EDE00ADF4E2 /* Emitter.cpp */,
+				502379951CFD9EDE00ADF4E2 /* Emitter.hpp */,
+				5023799A1CFE07D700ADF4E2 /* TestSet.cpp */,
+				5023799B1CFE07D700ADF4E2 /* TestSet.hpp */,
+				5023799D1CFE2FA900ADF4E2 /* EmmiterData.cpp */,
+				5023799E1CFE2FA900ADF4E2 /* EmmiterData.hpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				006D720219952D00008149E2 /* AVFoundation.framework */,
+				006D720319952D00008149E2 /* CoreMedia.framework */,
+				00B784AF0FF439BC000DE1D7 /* Accelerate.framework */,
+				00B784B00FF439BC000DE1D7 /* AudioToolbox.framework */,
+				00B784B10FF439BC000DE1D7 /* AudioUnit.framework */,
+				00B784B20FF439BC000DE1D7 /* CoreAudio.framework */,
+				5323E6B10EAFCA74003A9687 /* CoreVideo.framework */,
+				0091D8F80E81B9330029341E /* OpenGL.framework */,
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+				00B995581B128DF400A5C623 /* IOKit.framework */,
+				00B995591B128DF400A5C623 /* IOSurface.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* BabyM.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* BabyM */ = {
+			isa = PBXGroup;
+			children = (
+				01B97315FEAEA392516A2CEA /* Blocks */,
+				29B97315FDCFA39411CA2CEA /* Headers */,
+				080E96DDFE201D6D7F000001 /* Source */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = BabyM;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				EEE7E2AD76224A189777C052 /* Resources.h */,
+				8BD46255C79C419D8CBBA374 /* BabyM_Prefix.pch */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D7AB660B27C74F30BC929D31 /* CinderApp.icns */,
+				AE56D50D9CCB4546B9978638 /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3928E0F85E2D4ACAB502E9A4 /* nanovg */ = {
+			isa = PBXGroup;
+			children = (
+				DDEBB48A966344269F05658C /* src */,
+			);
+			name = nanovg;
+			sourceTree = "<group>";
+		};
+		55920FDAF50B40C4BFEE433B /* NanoVG */ = {
+			isa = PBXGroup;
+			children = (
+				C68D9C448CA34F5387E09289 /* deps */,
+				EFD2F91233224A748E395009 /* include */,
+				FB87E45974314E6ABC731BF6 /* src */,
+			);
+			name = NanoVG;
+			sourceTree = "<group>";
+		};
+		C68D9C448CA34F5387E09289 /* deps */ = {
+			isa = PBXGroup;
+			children = (
+				3928E0F85E2D4ACAB502E9A4 /* nanovg */,
+			);
+			name = deps;
+			sourceTree = "<group>";
+		};
+		DDEBB48A966344269F05658C /* src */ = {
+			isa = PBXGroup;
+			children = (
+				FDDFF65F353A427F9C4438DA /* fontstash.h */,
+				160791FFFCEE4BE291766112 /* nanovg.h */,
+				EDFC6EE9E4C34EDEAD49A0F8 /* nanovg_gl.h */,
+				FE7B5CEE01FF46D7A8692AD5 /* nanovg_gl_utils.h */,
+				FEA94C41024C48009E0DF400 /* stb_image.h */,
+				3A7095F42D794D5AAB6AC01C /* stb_truetype.h */,
+				22C51CA246284AC7B5372448 /* nanovg.c */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		EFD2F91233224A748E395009 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				120091FBA3FE46FEA194EABE /* ci_nanovg.hpp */,
+				FAB9EE1C30B5480AA39918DC /* ci_nanovg_gl.hpp */,
+				A1051C0ACFAC4492A563B9A8 /* SvgRenderer.hpp */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		FB87E45974314E6ABC731BF6 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				239FA529EC154D5FB8919201 /* ci_nanovg.cpp */,
+				E0A887101A1946E59A345AB0 /* ci_nanovg_gl.cpp */,
+				C54A1500A9BD41C7842C49DB /* SvgRenderer.cpp */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* BabyM */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "BabyM" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BabyM;
+			productInstallPath = "$(HOME)/Applications";
+			productName = BabyM;
+			productReference = 8D1107320486CEB800E47090 /* BabyM.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "BabyM" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* BabyM */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D1107260486CEB800E47090 /* BabyM */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				09BD164CA3CF4D0081FEDE88 /* CinderApp.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5023799C1CFE07D700ADF4E2 /* TestSet.cpp in Sources */,
+				739F476853954198955582BA /* BabyMApp.cpp in Sources */,
+				50675AC71CFF8B7000D700E9 /* TextRender.cpp in Sources */,
+				504EEF547D994D31A0C525BE /* nanovg.c in Sources */,
+				C70B723309274C21944F9010 /* ci_nanovg.cpp in Sources */,
+				5023799F1CFE2FA900ADF4E2 /* EmmiterData.cpp in Sources */,
+				502379931CFD9CCC00ADF4E2 /* Dot.cpp in Sources */,
+				757D743C291A4AA0B0BA749F /* ci_nanovg_gl.cpp in Sources */,
+				A16D6765E4DC436EA28E0912 /* SvgRenderer.cpp in Sources */,
+				502379961CFD9EDE00ADF4E2 /* Emitter.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = BabyM_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder_d.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.libcinder.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = BabyM;
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		C01FCF4C08A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_FAST_MATH = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = BabyM_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"NDEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder.a\"";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.libcinder.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = BabyM;
+				STRIP_INSTALLED_PRODUCT = YES;
+				SYMROOT = ./build;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CINDER_PATH = ../../../cinder_master;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++11";
+				CLANG_CXX_LIBRARY = "libc++";
+				ENABLE_TESTABILITY = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\"";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include";
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CINDER_PATH = ../../../cinder_master;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++11";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\"";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "BabyM" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				C01FCF4C08A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "BabyM" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}
