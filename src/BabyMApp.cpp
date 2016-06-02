@@ -28,23 +28,25 @@ public:
     
     int getTotalHits();
     float getMaxFitness();
-    float getTotalFitness();
-    void  newSelection();
-    
+	long double getTotalFitness();
+	int getRecordDistance();
+	void  newSelection();
+	bool lock;
     vec2 arrivalPoint;
     vec2 gravity;
-    float totalFitness;
+    long double totalFitness;
+	int recordDistance = 10000;
     float mutation = 0.04;
     
     int frames;
-    int maxFrames = 350;
+    int maxFrames = 300;
     int generations=0;
-    int testSetsAmount=45;
+    int testSetsAmount=50;
     int totalHits=0;
     
     bool isRunning = false;
     vector<TestSet> testSets;
-    
+	TestSet* bestSet;
     
     
     vector<EmitterData> matingPool;
@@ -56,7 +58,7 @@ void BabyMApp::setup()
     
     arrivalPoint = vec2(240,40);
     gravity = vec2(0,0.1);
-    
+	lock = true;
     
     testSets.reserve(testSetsAmount);
     
@@ -65,9 +67,11 @@ void BabyMApp::setup()
         testSets.push_back(TestSet());
         testSets[i].setup();
         testSets[i].randomize(3, maxFrames);
-        
     }
     
+
+	start();
+
 }
 
 
@@ -76,7 +80,8 @@ void BabyMApp::newSelection(){
     
     totalFitness = getTotalFitness();
     totalHits = getTotalHits();
-    
+	recordDistance = getRecordDistance();
+
     matingPool.clear();
     
     //for (int i = 0; i < testSets.length; i++) {
@@ -125,10 +130,13 @@ void BabyMApp::newSelection(){
 void BabyMApp::start(){
     frames = 0;
     isRunning =true;
-    
+
     for(auto& t : testSets){
         t.start();
     }
+
+	bestSet = &testSets[0];
+
   
 }
 
@@ -138,18 +146,21 @@ void BabyMApp::mouseDown( MouseEvent event )
 //    dot.mPosition = event.getPos();
 //    dot.mVelocity = ci::vec2(0,0);
 //    dot.mDirection = ci::vec2(0,0);
-    start();
 }
 
 
 void BabyMApp::keyDown( KeyEvent event ){
     if(event.getCode() == event.KEY_UP){
-        mutation += 0.01;
+        mutation += 0.005;
     }
-    if(event.getCode() == event.KEY_DOWN){
-        mutation -= 0.01;
-    }
-    
+	if (event.getCode() == event.KEY_DOWN){
+		mutation -= 0.005;
+	}
+	if (event.getCode() == event.KEY_l){
+		lock = !lock;
+
+	}
+
     if(event.getCode() == event.KEY_SPACE){
         newSelection();
         start();
@@ -162,22 +173,32 @@ void BabyMApp::keyDown( KeyEvent event ){
 
 void BabyMApp::update()
 {
-    for(auto& t : testSets){
-        t.update(gravity,arrivalPoint);
-    }
-    
+
     if(isRunning){
+
+
+		int lowestDistance = 10000;
+		for (auto& t : testSets){
+			t.update(gravity, arrivalPoint);
+			if (t.recordDistance < lowestDistance){
+				lowestDistance = t.recordDistance;
+				bestSet = &t;
+			}
+		}
+
         if(++frames == maxFrames){
             for(auto& t : testSets){
                 t.stop();
             }
             
-            if(getTotalHits() > 0){
-                
+
+
+            if(getTotalHits() > 0 && lock){
+				isRunning = false;
             }else{
-                newSelection();
-                start();
-                
+				newSelection();
+				start();
+               
             }
  
         }
@@ -197,8 +218,8 @@ float BabyMApp::getMaxFitness(){
     return max;
 }
 
-float BabyMApp::getTotalFitness(){
-    float fit = 0;
+long double BabyMApp::getTotalFitness(){
+    long double fit = 0;
     for(auto& t : testSets){
         fit += t.fitness;
     }
@@ -215,6 +236,17 @@ int BabyMApp::getTotalHits(){
     return fit;
 }
 
+int BabyMApp::getRecordDistance(){
+	int fit = 100000;
+	for (auto& t : testSets){
+		if (t.recordDistance < fit) fit = t.recordDistance;
+	}
+
+	return fit;
+}
+
+
+
 
 void BabyMApp::draw()
 {
@@ -223,19 +255,24 @@ void BabyMApp::draw()
     
     int textOffset=0;
     for(auto& t : testSets){
-        t.draw(textOffset);
-        textOffset+=10;
+      //  t.draw(textOffset);
+       // textOffset+=10;
     }
+
+	if (bestSet != nullptr){
+		bestSet->draw(0);
+	}
     
     
     int f = totalFitness * 10000000000000;
     gl::drawString("total fitness " + toString(f), vec2(500,20));
-    gl::drawString("generation " + toString(generations), vec2(500,30));
+	gl::drawString("pool size " + toString(matingPool.size()), vec2(500, 30));
     gl::drawString("mutation " + toString(mutation), vec2(500,40));
-    gl::drawString("pool size " + toString(matingPool.size()), vec2(500,50));
+  //  gl::drawString("pool size " + toString(matingPool.size()), vec2(500,50));
 
-    TextRenderSingleton::Instance()->renderText(toString(totalHits), vec2(500,70));
-    
-                                                ;}
+	TextRenderSingleton::Instance()->renderText("HITS #" + toString(totalHits), vec2(500, 80));
+	TextRenderSingleton::Instance()->renderText("GEN #" + toString(generations), vec2(500, 100));
+	TextRenderSingleton::Instance()->renderText("DIST #" + toString(recordDistance), vec2(500, 120));
+}
 
 CINDER_APP( BabyMApp, RendererGl )

@@ -15,7 +15,7 @@ using namespace ci::app;
 
 TextRender::TextRender(){
     
-	mFontBig = Font("Gotham Book", 18);
+	mFontBig = Font("Arial", 28);
 //	mFontSmall = Font("Pixel Operator 8", 14);
 	//mFontSmall = Font("Pixel Operator 8", 14);
 	mFontSmall = Font("Gotham Book", 14);

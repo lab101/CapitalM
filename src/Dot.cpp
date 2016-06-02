@@ -7,6 +7,7 @@
 //
 
 #include "Dot.hpp"
+#include "cinder/gl/gl.h"
 
 
 using namespace ci;
@@ -34,7 +35,6 @@ void Dot::update(){
 
 void Dot::resetPosition(){
     mPosition = mStartPosition;
-    recordDistance = 1000;
 }
 
 
@@ -47,9 +47,10 @@ void Dot::resetForces(){
 
 
 
-void Dot::draw(){
+void Dot::draw(float alpha){
 
-    gl::color(mColor);
+	
+    gl::color(ColorA(mColor,alpha));
     gl::drawStrokedCircle(mPosition, 10);
 
   //  gl::color(1, 0, 0);

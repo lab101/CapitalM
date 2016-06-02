@@ -10,6 +10,7 @@
 #define Emitter_hpp
 
 #include <stdio.h>
+#include "cinder/Vector.h"
 
 
 class Emitter{

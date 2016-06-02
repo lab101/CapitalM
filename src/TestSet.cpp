@@ -9,6 +9,7 @@
 #include "TestSet.hpp"
 #include "cinder/Rand.h"
 #include "cinder/app/App.h"
+#include "cinder/gl/gl.h"
 
 using namespace std;
 using namespace ci;
@@ -30,10 +31,23 @@ void TestSet::setup(){
     d1.setup(vec2(20,getWindowHeight()-300), vec2(240,40), ci::Color(0, 1, 1));
     dots.push_back(d1);
     
-    Dot d2;
-    d2.setup(vec2(120,getWindowHeight()-300), vec2(340,40), ci::Color(0, 0, 1));
-    dots.push_back(d2);
-    
+	Dot d2;
+	d2.setup(vec2(120, getWindowHeight() - 300), vec2(340, 40), ci::Color(0, 0, 1));
+	dots.push_back(d2);
+	
+	Dot d3;
+	d3.setup(vec2(420, getWindowHeight() - 30), vec2(440, 240), ci::Color(0.5, 1, 0));
+	dots.push_back(d3);
+	
+	Dot d4;
+	d4.setup(vec2(420, getWindowHeight() - 80), vec2(440, 100), ci::Color(1.0, 0.2, 0));
+	dots.push_back(d4);
+
+
+	Dot d5;
+	d5.setup(vec2(20, getWindowHeight() - 280), vec2(140, 400), ci::Color(1.0, 0.5, 0.3));
+	dots.push_back(d5);
+
     
     
 
@@ -65,7 +79,7 @@ void TestSet::start(){
     isRunning = true;
     isHitTarget = false;
     lifeTime = 0;
-    
+	recordDistance = 10000;
     for (auto& d : dots){
         d.resetForces();
         d.resetPosition();
@@ -93,13 +107,20 @@ void TestSet::update(vec2& gravity,vec2& target){
     ++lifeTime;
     
     
-    isHitTarget = true;
-    
+  //  isHitTarget = true;
+	float combinedDistance = 0;
+
     for(auto& d : dots){
         int dataIndex = getElapsedFrames() % emmitterData.data.size();
         checkBounderies(d);
         applyForces(d,dataIndex);
-        isHitTarget *= checkTarget(d);
+
+
+		float distance = glm::distance(d.mPosition, d.mTargetPosition);
+		combinedDistance += distance;
+
+
+       // isHitTarget *= checkTarget(d);
         limitSpeed(d);
         
         d.mVelocity = vLerp(d.mVelocity, vec2(0,0), 0.09);
@@ -108,6 +129,9 @@ void TestSet::update(vec2& gravity,vec2& target){
         d.update();
     }
     
+	if (combinedDistance < recordDistance) recordDistance = combinedDistance;
+	if (combinedDistance < 50) isHitTarget = true;
+
     if(isHitTarget) stop();
     
 }
@@ -123,15 +147,16 @@ void TestSet::limitSpeed(Dot& dot){
 
 
 bool TestSet::checkTarget(Dot& dot){
-    
-    float distance = glm::distance(dot.mPosition, dot.mTargetPosition);
-    
-    if(distance < dot.recordDistance){
-        dot.recordDistance = distance;
-    }
-    
-    
-    return (distance < 20);    
+
+	/*  float distance = glm::distance(dot.mPosition, dot.mTargetPosition);
+
+	  if(distance < dot.recordDistance){
+	  dot.recordDistance = distance;
+	  }
+
+
+	  return (distance < 20);    */
+	return 0;
 }
 
 
@@ -184,6 +209,14 @@ void TestSet::draw(int textOffset){
 
     gl::color(0, 1, 1,0.08);
 
+	float lineWidth = lmap<float>(recordDistance, 400, 0, 0.1, 3);
+	
+	if (lineWidth < 0) lineWidth = 0.1;
+
+
+	float alpha = lmap<float>(recordDistance, 2000, 0, 0.1, 1);
+	gl::lineWidth(lineWidth);
+
     for(auto& e : emmitters){
         gl::drawStrokedCircle(e.mPosition, fmax(e.mForce,4));
     }
@@ -191,16 +224,16 @@ void TestSet::draw(int textOffset){
     for(int i = 0; i < dots.size(); ++i){
         
         if(i>0){
-            gl::color(0, 1, 1,0.3);
+			gl::color(0, 1, 1, alpha*0.5);
             gl::drawLine(dots[i-1].mPosition, dots[i].mPosition);
         }
         
-        dots[i].draw();
+		dots[i].draw(alpha);
     }
 
 
     
-    gl::drawString("l:" + to_string(lifeTime), vec2(10,10+textOffset));
+	if (recordDistance< 250) gl::drawString("l:" + to_string((int) recordDistance), vec2(10, 10 + textOffset));
  //   gl::drawString("d:" + to_string(recordDistance), vec2(50,10+textOffset));
     
     int f = fitness*10000000000000;
@@ -229,21 +262,25 @@ void TestSet::randomize(int emmitterAmount,int frames){
 
 
 
-float TestSet::calcuclateFitnessScore(){
+long double TestSet::calcuclateFitnessScore(){
     fitness= 0;
-    for(auto&d :dots){
-        if (d.recordDistance < 1) d.recordDistance = 1;
+   // for(auto&d :dots){
+    //    if (d.recordDistance < 1) d.recordDistance = 1;
         
         // Reward finishing faster and getting close
-        fitness = (1.0f/(lifeTime*d.recordDistance));
+		lifeTime *= 0.1;
+        fitness = (1.0f/(recordDistance));
         
         
         //if (hitObstacle) fitness *= 0.1; // lose 90% of fitness hitting an obstacle
-    }
+  //  }
 
     // Make the function exponential
     fitness = pow(fitness, 4);
-    if (isHitTarget) fitness *= 2; // twice the fitness for finishing!
+
+	fitness *= 0.01;
+
+    if (isHitTarget) fitness *= 2.0; // twice the fitness for finishing!
 
     
     return fitness;

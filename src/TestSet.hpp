@@ -43,10 +43,10 @@ public:
     void stop();
     
     int lifeTime;
-    float fitness = 0;
-   // float recordDistance = 1000;
+    long double fitness = 0;
+    float recordDistance = 1000;
     
-    float calcuclateFitnessScore();
+    long double calcuclateFitnessScore();
     
     
 };
