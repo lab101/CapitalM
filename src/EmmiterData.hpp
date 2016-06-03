@@ -46,7 +46,7 @@ public:
 
                     // emmitters
                 for (int j = 0; j < data[i].size(); j++) {
-                    data[i][j] = ci::randFloat(0, 180);
+                    data[i][j] = ci::randFloat(0, 160);
                 }
                 
                 

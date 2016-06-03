@@ -47,11 +47,18 @@ void Dot::resetForces(){
 
 
 
-void Dot::draw(float alpha){
+void Dot::draw(bool inColor){
 
-	
-    gl::color(ColorA(mColor,alpha));
-    gl::drawStrokedCircle(mPosition, 10);
+    if(inColor){
+        gl::color(Color(mColor));
+    }else{
+        gl::color(ColorA(mColor,1));
+
+    }
+    
+    float lineWidth = inColor == true ? 5 : 1;
+    float segments = inColor == true ? 8 : 4;
+    gl::drawStrokedCircle(mPosition, 10,lineWidth,segments );
 
   //  gl::color(1, 0, 0);
     gl::drawSolidCircle(mTargetPosition, 10);

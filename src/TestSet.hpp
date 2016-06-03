@@ -29,9 +29,9 @@ public:
     std::vector<Dot> dots;
 
     void randomize(int emmitterAmount,int frames);
-    void setup();
+    void setup(ci::Rectf screen);
     void update(cinder::vec2& gravity,cinder::vec2& target);
-    void draw(int textOffset);
+    void draw(int textOffset,bool background);
     
     void setNewData(EmitterData e);
     void applyForces(Dot& d,int dataIndex);
@@ -45,6 +45,7 @@ public:
     int lifeTime;
     long double fitness = 0;
     float recordDistance = 1000;
+    ci::Rectf mScreen;
     
     long double calcuclateFitnessScore();
     

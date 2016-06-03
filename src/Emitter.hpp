@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "cinder/Vector.h"
+#include "cinder/CinderMath.h"
 
 
 class Emitter{
@@ -18,6 +19,8 @@ class Emitter{
 public:
     ci::vec2 mPosition;
     float mForce = 0;
+    float mTargetForce = 0;
+
     
     Emitter(ci::vec2 position,float force){
         mPosition = position;
@@ -25,7 +28,13 @@ public:
     }
     
     void setup();
-    void udpate();
+    void update(){
+        
+        mForce  = ci::lerp<float>(mForce,mTargetForce,0.2);
+        
+        mForce  = ci::lerp<float>(mForce,0,0.02);
+//        if(mForce > 0)
+    }
     
 };
 #endif /* Emitter_hpp */

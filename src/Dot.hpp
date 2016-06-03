@@ -32,7 +32,7 @@ public:
     
     void setup(ci::vec2 start,ci::vec2 end,ci::Color color);
     void update();
-    void draw(float alpha);
+    void draw(bool inColor);
     
     void resetPosition();
     void resetForces();

@@ -39,14 +39,15 @@ public:
     float mutation = 0.04;
     
     int frames;
-    int maxFrames = 300;
-    int generations=0;
-    int testSetsAmount=50;
-    int totalHits=0;
+    int maxFrames       = 300;
+    int generations     = 0;
+    int testSetsAmount  = 20;
+    int totalHits       = 0;
     
     bool isRunning = false;
     vector<TestSet> testSets;
 	TestSet* bestSet;
+    
     
     
     vector<EmitterData> matingPool;
@@ -58,19 +59,23 @@ void BabyMApp::setup()
     
     arrivalPoint = vec2(240,40);
     gravity = vec2(0,0.1);
-	lock = true;
+	lock = false;
+    
+    setWindowSize(1200, 600);
     
     testSets.reserve(testSetsAmount);
     
+    Rectf screen(0, 0, 800, 600);
     
     for(int i=0; i < testSetsAmount;++i){
         testSets.push_back(TestSet());
-        testSets[i].setup();
+        testSets[i].setup(screen);
         testSets[i].randomize(3, maxFrames);
     }
     
 
 	start();
+    
 
 }
 
@@ -84,20 +89,15 @@ void BabyMApp::newSelection(){
 
     matingPool.clear();
     
-    //for (int i = 0; i < testSets.length; i++) {
+
     for(auto& t : testSets){
         float fitnessNormal = lmap<float>(t.fitness,0,maxFitness,0,1);
         int n = (int) (fitnessNormal * 100);  // Arbitrary multiplier
+
         for (int j = 0; j < n; j++) {
-//            EmitterData emData;
-//            emData.data = t.mData;
             matingPool.push_back(t.emmitterData);
         }
     }
-    
-    
-    //cout << matingPool.size() << endl;
-    
     
     
     
@@ -114,14 +114,9 @@ void BabyMApp::newSelection(){
         EmitterData child = mom.crossover(dad);
         child.mutate(mutation);
         
-        
         testSets[i].setNewData(child);
-        // Mutate their genes
-       // child.mutate(mutationRate);
-        // Fill the new population with the new child
-        //PVector location = new PVector(width/2,height+20);
-        //population[i] = new Rocket(location, child,population.length);
     }
+    
     generations++;
 
 
@@ -255,24 +250,24 @@ void BabyMApp::draw()
     
     int textOffset=0;
     for(auto& t : testSets){
-      //  t.draw(textOffset);
-       // textOffset+=10;
+        t.draw(textOffset,true);
+        textOffset+=10;
     }
 
 	if (bestSet != nullptr){
-		bestSet->draw(0);
+		bestSet->draw(0,false);
 	}
     
     
     int f = totalFitness * 10000000000000;
-    gl::drawString("total fitness " + toString(f), vec2(500,20));
-	gl::drawString("pool size " + toString(matingPool.size()), vec2(500, 30));
-    gl::drawString("mutation " + toString(mutation), vec2(500,40));
+    gl::drawString("total fitness " + toString(f), vec2(900,20));
+	gl::drawString("pool size " + toString(matingPool.size()), vec2(900, 30));
+    gl::drawString("mutation " + toString(mutation), vec2(900,40));
   //  gl::drawString("pool size " + toString(matingPool.size()), vec2(500,50));
 
-	TextRenderSingleton::Instance()->renderText("HITS #" + toString(totalHits), vec2(500, 80));
-	TextRenderSingleton::Instance()->renderText("GEN #" + toString(generations), vec2(500, 100));
-	TextRenderSingleton::Instance()->renderText("DIST #" + toString(recordDistance), vec2(500, 120));
+	TextRenderSingleton::Instance()->renderText("HITS #" + toString(totalHits), vec2(900, 80));
+	TextRenderSingleton::Instance()->renderText("GEN #" + toString(generations), vec2(900, 110));
+	TextRenderSingleton::Instance()->renderText("DIST #" + toString(recordDistance), vec2(900, 140));
 }
 
 CINDER_APP( BabyMApp, RendererGl )
