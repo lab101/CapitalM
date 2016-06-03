@@ -237,7 +237,7 @@ void TestSet::draw(int textOffset,bool background){
 
 
 	//float alpha = lmap<float>(recordDistance, 2000, 0, 0.1, 1);
-	gl::lineWidth(14);
+	//gl::lineWidth(14);
 
     if(!background){
         gl::color(1, 1, 1, 0.1);

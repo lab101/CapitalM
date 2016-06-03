@@ -15,6 +15,7 @@
 #include "Emitter.hpp"
 #include "Dot.hpp"
 #include "EmmiterData.hpp"
+#include "cinder\Rect.h"
 
 class TestSet{
 
