@@ -29,8 +29,22 @@ void TestSet::setup(){
         emmitters.push_back(Emitter(vec2(848,offset + 260 * i),f));
 
     }
+
     
+    Dot d19;
+    d19.setup(vec2(304, 500), vec2(354, 583), ci::Color(1.0, .8, 0.9));
+    dots.push_back(d19);
+
+
+    Dot d20;
+    d20.setup(vec2(384, 200), vec2(384, 617), ci::Color(1.0, .8, 0.9));
+    dots.push_back(d20);
+
     
+    Dot d21;
+    d21.setup(vec2(324, 600), vec2(373, 748), ci::Color(.4, .1, 0.9));
+    dots.push_back(d21);
+
     // left under
     Dot d22;
     d22.setup(vec2(124, 869), vec2(354, 869), ci::Color(.8, .8, 0.1));
