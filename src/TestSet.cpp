@@ -18,50 +18,49 @@ using namespace ci::app;
 
 
 
-void TestSet::setup(Rectf screen){
+void TestSet::setup(){
     
     float f = 1;
-    mScreen = screen;
 
-    
+    float const offset = 324;
     for(int i=0; i < 3; ++i){
-        emmitters.push_back(Emitter(vec2(50,300*i),f));
-        emmitters.push_back(Emitter(vec2(350,300*i),f));
-        emmitters.push_back(Emitter(vec2(700,300*i),f));
+        emmitters.push_back(Emitter(vec2(38,offset + 260 * i),f));
+        emmitters.push_back(Emitter(vec2(451,offset + 260 * i),f));
+        emmitters.push_back(Emitter(vec2(848,offset + 260 * i),f));
 
     }
     
     
+    // left under
+    Dot d22;
+    d22.setup(vec2(124, 869), vec2(354, 869), ci::Color(.8, .8, 0.1));
+    dots.push_back(d22);
+
     
-//    emmitters.push_back(Emitter(vec2(100,mScreen.getHeight()-10),f));
-//    emmitters.push_back(Emitter(vec2(500,mScreen.getHeight()-10),f));
-//    emmitters.push_back(Emitter(vec2(50,10),f));
-//    emmitters.push_back(Emitter(vec2(450,10),f));
-//    emmitters.push_back(Emitter(getWindowCenter(),f));
-    
-    
-    
-    
+    // left under
+    Dot d4;
+    d4.setup(vec2(184, 704), vec2(206, 868), ci::Color(1.0, 0.2, 0));
+    dots.push_back(d4);
+
+    // top left
     Dot d1;
-    d1.setup(vec2(20,screen.getHeight()-300), vec2(240,140), ci::Color(0, 1, 1));
+    d1.setup(vec2(304,704), vec2(208,238), ci::Color(0, 1, 1));
     dots.push_back(d1);
     
+    // middle
+    Dot d3;
+    d3.setup(vec2(420,704), vec2(446, 478), ci::Color(0.5, 1, 0));
+    dots.push_back(d3);
+    
+    //top right
 	Dot d2;
-	d2.setup(vec2(120, screen.getHeight() - 300), vec2(540, 140), ci::Color(0, 0, 1));
+	d2.setup(vec2(537, 704), vec2(686, 240), ci::Color(0, 0, 1));
 	dots.push_back(d2);
-	
-	Dot d3;
-	d3.setup(vec2(420, mScreen.getHeight() - 30), vec2(440, 240), ci::Color(0.5, 1, 0));
-	dots.push_back(d3);
 //
-//	Dot d4;
-//	d4.setup(vec2(420, mScreen.getHeight(); - 80), vec2(440, 100), ci::Color(1.0, 0.2, 0));
-//	dots.push_back(d4);
-//
-//
-//	Dot d5;
-//	d5.setup(vec2(20, mScreen.getHeight(); - 280), vec2(140, 400), ci::Color(1.0, 0.5, 0.3));
-//	dots.push_back(d5);
+    // bottom right
+	Dot d5;
+	d5.setup(vec2(520, 704), vec2(691, 872), ci::Color(1.0, 0.5, 0.3));
+	dots.push_back(d5);
 
     
     
@@ -99,6 +98,10 @@ void TestSet::start(){
         d.resetForces();
         d.resetPosition();
     }
+    
+    for(auto&e : emmitters){
+        e.reset();
+    }
          
          
 
@@ -114,7 +117,7 @@ void TestSet::stop(){
 
 
 
-void TestSet::update(vec2& gravity,vec2& target){
+void TestSet::update(vec2& gravity){
     
     
     if(!isRunning) return;
@@ -186,14 +189,14 @@ bool TestSet::checkTarget(Dot& dot){
 void TestSet::checkBounderies(Dot& dot){
     
     // hit the floor
-    if(dot.mPosition.y > mScreen.getHeight() || dot.mPosition.y < 0){
+    if(dot.mPosition.y > GS()->mScreen.getHeight() || dot.mPosition.y < 0){
         dot.mDirection.y = -(dot.mDirection.y);
         dot.mVelocity.y = -(dot.mVelocity.y);
     }
     
     
     // moved outside on the left or right
-    if(dot.mPosition.x > mScreen.getWidth() || dot.mPosition.x < 0){
+    if(dot.mPosition.x > GS()->mScreen.getWidth() || dot.mPosition.x < 0){
         // stop();
         dot.mDirection.x = -dot.mDirection.x;
         dot.mVelocity.x = -dot.mVelocity.x;
@@ -238,12 +241,18 @@ void TestSet::draw(int textOffset,bool background){
 
 	//float alpha = lmap<float>(recordDistance, 2000, 0, 0.1, 1);
 	//gl::lineWidth(14);
+    
+    if(GS()->isBackgroundDrawingOff && background) return;
 
-    if(!background){
-        gl::color(1, 1, 1, 0.1);
+    if(!background ){
 
         for(auto& e : emmitters){
+            gl::color(1, 1, 1, 0.2);
+
             gl::drawSolidCircle(e.mPosition, fmax(e.mForce,4));
+            
+            gl::color(1, 1, 1, 0.6);
+            gl::drawStrokedCircle(e.mPosition, fmax(e.mForce,4),8,28);
         }
     }
     
@@ -260,19 +269,17 @@ void TestSet::draw(int textOffset,bool background){
 
     
 	if (recordDistance< 250) gl::drawString("l:" + to_string((int) recordDistance), vec2(800, 10 + textOffset));
- //   gl::drawString("d:" + to_string(recordDistance), vec2(50,10+textOffset));
     
     int f = fitness*10000000000000;
-    if(f>0) gl::drawString(to_string(f), vec2(900,10+textOffset));
+    if(f>0) gl::drawString(to_string(f), vec2(900,10 + textOffset));
     
     
-    gl::drawStrokedRect(mScreen, 1);
 }
 
 
 
 
-void TestSet::randomize(int emmitterAmount,int frames){
+void TestSet::randomize(int frames){
     
     
     ci::Perlin perlin = Perlin( 4,  clock() & 65535 );
@@ -317,8 +324,59 @@ long double TestSet::calcuclateFitnessScore(){
 
     if (isHitTarget) fitness *= 2.0; // twice the fitness for finishing!
 
-    
     return fitness;
-
 }
+
+
+void TestSet::readData(std::string fileName){
+    ifstream dataFile;
+    dataFile.open (getAssetPath("").string() + "/" + fileName);
+    
+    string line;
+    int const eSize = emmitters.size();// emmitters.size();
+
+    if (dataFile.is_open())
+    {
+        while ( getline (dataFile,line) )
+        {
+            
+            vector<float> emitterForces;
+            emitterForces.reserve(eSize);
+            
+            vector<string> splitEmitters = split(line, ';');
+            for(auto& s : splitEmitters){
+                if(s!= "") emitterForces.push_back(stof(s));
+            }
+
+            emmitterData.data.push_back(emitterForces);
+
+
+        }
+        dataFile.close();
+    }
+    
+    
+
+
+    
+}
+
+
+void TestSet::dumpData(std::string fileName){
+    ofstream dataFile;
+    dataFile.open (getAssetPath("").string() + "/" + fileName);
+
+    for(auto& timeFrame : emmitterData.data){
+        string row;
+        for(float emmiterForce : timeFrame){
+            row += toString(emmiterForce) + ";";
+        }
+        
+        dataFile << row << "\n";
+
+    }
+    
+    dataFile.close();
+}
+
 

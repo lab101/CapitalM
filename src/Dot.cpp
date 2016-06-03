@@ -56,7 +56,7 @@ void Dot::draw(bool inColor){
 
     }
     
-    float lineWidth = inColor == true ? 5 : 1;
+    float lineWidth = inColor == true ? 8 : 1;
     float segments = inColor == true ? 8 : 4;
     gl::drawStrokedCircle(mPosition, 10,lineWidth,segments );
 

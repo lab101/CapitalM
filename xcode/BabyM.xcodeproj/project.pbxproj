@@ -17,6 +17,8 @@
 		00B9955A1B128DF400A5C623 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995581B128DF400A5C623 /* IOKit.framework */; };
 		00B9955B1B128DF400A5C623 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995591B128DF400A5C623 /* IOSurface.framework */; };
 		09BD164CA3CF4D0081FEDE88 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = D7AB660B27C74F30BC929D31 /* CinderApp.icns */; };
+		158C86351D017D12003C4416 /* GlobalSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 158C86331D017D12003C4416 /* GlobalSettings.cpp */; };
+		158C86381D017D38003C4416 /* SettingManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 158C86361D017D38003C4416 /* SettingManager.cpp */; };
 		502379931CFD9CCC00ADF4E2 /* Dot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 502379911CFD9CCC00ADF4E2 /* Dot.cpp */; };
 		502379961CFD9EDE00ADF4E2 /* Emitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 502379941CFD9EDE00ADF4E2 /* Emitter.cpp */; };
 		5023799C1CFE07D700ADF4E2 /* TestSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5023799A1CFE07D700ADF4E2 /* TestSet.cpp */; };
@@ -43,6 +45,10 @@
 		00B995591B128DF400A5C623 /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		120091FBA3FE46FEA194EABE /* ci_nanovg.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = ci_nanovg.hpp; path = ../blocks/NanoVG/include/ci_nanovg.hpp; sourceTree = "<group>"; };
+		158C86331D017D12003C4416 /* GlobalSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GlobalSettings.cpp; path = ../src/GlobalSettings.cpp; sourceTree = "<group>"; };
+		158C86341D017D12003C4416 /* GlobalSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GlobalSettings.h; path = ../src/GlobalSettings.h; sourceTree = "<group>"; };
+		158C86361D017D38003C4416 /* SettingManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SettingManager.cpp; path = ../src/SettingManager.cpp; sourceTree = "<group>"; };
+		158C86371D017D38003C4416 /* SettingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingManager.h; path = ../src/SettingManager.h; sourceTree = "<group>"; };
 		160791FFFCEE4BE291766112 /* nanovg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = nanovg.h; path = ../blocks/NanoVG/deps/nanovg/src/nanovg.h; sourceTree = "<group>"; };
 		22C51CA246284AC7B5372448 /* nanovg.c */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = nanovg.c; path = ../blocks/NanoVG/deps/nanovg/src/nanovg.c; sourceTree = "<group>"; };
 		239FA529EC154D5FB8919201 /* ci_nanovg.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = ci_nanovg.cpp; path = ../blocks/NanoVG/src/ci_nanovg.cpp; sourceTree = "<group>"; };
@@ -110,9 +116,7 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				50675AC81CFF8BEC00D700E9 /* Singleton.hpp */,
-				50675AC51CFF8B7000D700E9 /* TextRender.cpp */,
-				50675AC61CFF8B7000D700E9 /* TextRender.hpp */,
+				158C86321D017CF8003C4416 /* helpers */,
 				27FB0846D0BF45B7BF3A7BC8 /* BabyMApp.cpp */,
 				502379911CFD9CCC00ADF4E2 /* Dot.cpp */,
 				502379921CFD9CCC00ADF4E2 /* Dot.hpp */,
@@ -151,6 +155,20 @@
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		158C86321D017CF8003C4416 /* helpers */ = {
+			isa = PBXGroup;
+			children = (
+				50675AC81CFF8BEC00D700E9 /* Singleton.hpp */,
+				50675AC51CFF8B7000D700E9 /* TextRender.cpp */,
+				50675AC61CFF8B7000D700E9 /* TextRender.hpp */,
+				158C86361D017D38003C4416 /* SettingManager.cpp */,
+				158C86371D017D38003C4416 /* SettingManager.h */,
+				158C86331D017D12003C4416 /* GlobalSettings.cpp */,
+				158C86341D017D12003C4416 /* GlobalSettings.h */,
+			);
+			name = helpers;
 			sourceTree = "<group>";
 		};
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
@@ -324,6 +342,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				158C86381D017D38003C4416 /* SettingManager.cpp in Sources */,
 				5023799C1CFE07D700ADF4E2 /* TestSet.cpp in Sources */,
 				739F476853954198955582BA /* BabyMApp.cpp in Sources */,
 				50675AC71CFF8B7000D700E9 /* TextRender.cpp in Sources */,
@@ -331,6 +350,7 @@
 				C70B723309274C21944F9010 /* ci_nanovg.cpp in Sources */,
 				5023799F1CFE2FA900ADF4E2 /* EmmiterData.cpp in Sources */,
 				502379931CFD9CCC00ADF4E2 /* Dot.cpp in Sources */,
+				158C86351D017D12003C4416 /* GlobalSettings.cpp in Sources */,
 				757D743C291A4AA0B0BA749F /* ci_nanovg_gl.cpp in Sources */,
 				A16D6765E4DC436EA28E0912 /* SvgRenderer.cpp in Sources */,
 				502379961CFD9EDE00ADF4E2 /* Emitter.cpp in Sources */,

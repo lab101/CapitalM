@@ -29,9 +29,9 @@ public:
     std::vector<Emitter> emmitters;
     std::vector<Dot> dots;
 
-    void randomize(int emmitterAmount,int frames);
-    void setup(ci::Rectf screen);
-    void update(cinder::vec2& gravity,cinder::vec2& target);
+    void randomize(int frames);
+    void setup();
+    void update(cinder::vec2& gravity);
     void draw(int textOffset,bool background);
     
     void setNewData(EmitterData e);
@@ -46,9 +46,11 @@ public:
     int lifeTime;
     long double fitness = 0;
     float recordDistance = 1000;
-    ci::Rectf mScreen;
     
     long double calcuclateFitnessScore();
+    
+    void dumpData(std::string fileName);
+    void readData(std::string fileName);
     
     
 };

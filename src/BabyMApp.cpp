@@ -9,6 +9,9 @@
 #include "TextRender.hpp"
 #include "TestSet.hpp"
 
+#include "cinder/params/Params.h"
+#include "SettingManager.h"
+
 using namespace ci;
 using namespace ci::app;
 using namespace std;
@@ -32,51 +35,86 @@ public:
 	int getRecordDistance();
 	void  newSelection();
 	bool lock;
-    vec2 arrivalPoint;
-    vec2 gravity;
+
     long double totalFitness;
 	int recordDistance = 10000;
-    float mutation = 0.04;
+    float mutation;
     
     int frames;
-    int maxFrames       = 300;
+    int maxFrames       = 1050;
     int generations     = 0;
-    int testSetsAmount  = 20;
+    int testSetsAmount;
     int totalHits       = 0;
     
     bool isRunning = false;
     vector<TestSet> testSets;
 	TestSet* bestSet;
+    params::InterfaceGlRef	mParams;
+
     
-    
+    gl::TextureRef  building;
     
     vector<EmitterData> matingPool;
+    
+    ci::vec2 mousePos;
 };
 
 void BabyMApp::setup()
 {
     
+    //string replayFile = "emmitterData8066.csv";
+    string replayFile = "";
     
-    arrivalPoint = vec2(240,40);
-    gravity = vec2(0,0.1);
-	lock = false;
     
-    setWindowSize(1200, 600);
+    GS()->gravity = vec2(0,0.1);
+    
+    if(replayFile != ""){
+        mutation = 0;
+        testSetsAmount = 1;
+        lock = true;
+
+    }else{
+        testSetsAmount = 1000;
+        mutation = 0.001;
+        lock = true;
+    }
+    
+    
+    building = gl::Texture::create(loadImage(loadAsset("building.png")));
+    
     
     testSets.reserve(testSetsAmount);
     
-    Rectf screen(0, 0, 800, 600);
-    
+    GS()->mScreen.set(0, 0, building->getWidth(), building->getHeight());
+    // GS()->mScreen.set(0, 0, 800, 600);
+    setWindowSize(GS()->mScreen.getWidth() + 300, GS()->mScreen.getHeight());
+
     for(int i=0; i < testSetsAmount;++i){
         testSets.push_back(TestSet());
-        testSets[i].setup(screen);
-        testSets[i].randomize(3, maxFrames);
+        testSets[i].setup();
+        if(replayFile != ""){
+            testSets[i].readData(replayFile);
+        }else{
+            testSets[i].randomize(maxFrames);
+        }
     }
     
 
 	start();
     
+    
+    // Create the interface and give it a name.
+    mParams = params::InterfaceGl::create( getWindow(), "App parameters", toPixels( ivec2( 200, 300 ) ) );
+    mParams->setPosition(vec2(GS()->mScreen.x2 +50,300));
+    
+    
+    // Setup some basic parameters.
+    
 
+    mParams->addParam( "lerpTargetForce", &(GS()->lerpTargetForce)).min( 0.001f ).max( 0.9f ).precision( 10 ).step( 0.0001f );
+    mParams->addParam( "lerpFalloffForce", &(GS()->lerpFalloffForce)).min( 0.000001f ).max( 0.9f ).precision( 10 ).step( 0.00001f );
+    mParams->addParam( "isBackgroundDrawingOff", &(GS()->isBackgroundDrawingOff));
+    
 }
 
 
@@ -124,7 +162,7 @@ void BabyMApp::newSelection(){
 
 void BabyMApp::start(){
     frames = 0;
-    isRunning =true;
+    isRunning = true;
 
     for(auto& t : testSets){
         t.start();
@@ -141,6 +179,7 @@ void BabyMApp::mouseDown( MouseEvent event )
 //    dot.mPosition = event.getPos();
 //    dot.mVelocity = ci::vec2(0,0);
 //    dot.mDirection = ci::vec2(0,0);
+    mousePos = event.getPos();
 }
 
 
@@ -157,7 +196,7 @@ void BabyMApp::keyDown( KeyEvent event ){
 	}
 
     if(event.getCode() == event.KEY_SPACE){
-        newSelection();
+       // newSelection();
         start();
 
     }
@@ -174,11 +213,19 @@ void BabyMApp::update()
 
 		int lowestDistance = 10000;
 		for (auto& t : testSets){
-			t.update(gravity, arrivalPoint);
+			t.update(GS()->gravity);
+            
 			if (t.recordDistance < lowestDistance){
 				lowestDistance = t.recordDistance;
 				bestSet = &t;
 			}
+            
+            
+            if(t.isHitTarget && lock){
+                t.dumpData("emmitterData" + toString(getElapsedFrames()) +".csv");
+                isRunning = false;
+                return;
+            }
 		}
 
         if(++frames == maxFrames){
@@ -190,10 +237,10 @@ void BabyMApp::update()
 
             if(getTotalHits() > 0 && lock){
 				isRunning = false;
+
             }else{
 				newSelection();
 				start();
-               
             }
  
         }
@@ -248,6 +295,10 @@ void BabyMApp::draw()
     gl::clear( Color( 0, 0, 0 ) );
 
     
+    gl::color(0.5, 0.5, 0.5);
+    gl::draw(building);
+    
+
     int textOffset=0;
     for(auto& t : testSets){
         t.draw(textOffset,true);
@@ -258,16 +309,34 @@ void BabyMApp::draw()
 		bestSet->draw(0,false);
 	}
     
+    gl::color(1, 0, 0);
+    gl::drawStrokedRect(GS()->mScreen, 1);
     
-    int f = totalFitness * 10000000000000;
-    gl::drawString("total fitness " + toString(f), vec2(900,20));
-	gl::drawString("pool size " + toString(matingPool.size()), vec2(900, 30));
-    gl::drawString("mutation " + toString(mutation), vec2(900,40));
-  //  gl::drawString("pool size " + toString(matingPool.size()), vec2(500,50));
+    gl::color(0, 0, 0);
+    gl::drawSolidRect(Rectf(GS()->mScreen.x2,0,getWindowWidth(),getWindowHeight()));
+    
+    gl::color(1, 1, 1);
 
-	TextRenderSingleton::Instance()->renderText("HITS #" + toString(totalHits), vec2(900, 80));
-	TextRenderSingleton::Instance()->renderText("GEN #" + toString(generations), vec2(900, 110));
-	TextRenderSingleton::Instance()->renderText("DIST #" + toString(recordDistance), vec2(900, 140));
+    
+
+    int offs = GS()->mScreen.x2 + 60;
+    //int f = totalFitness * 10000000000;
+    //gl::drawString("total fitness \t" + toString(f), vec2(900,20));
+	gl::drawString("pool size \t" + toString(matingPool.size()), vec2(offs, 35));
+    gl::drawString("mutation \t" + toString(mutation), vec2(offs,50));
+    gl::drawString("population \t" + toString(testSetsAmount), vec2(offs,65));
+  //  gl::drawString("pool size " + toString(matingPool.size()), vec2(500,50));
+    gl::drawString("mouse\t" + toString(mousePos), vec2(offs, 80));
+ 
+	TextRenderSingleton::Instance()->renderText("HITS #" + toString(totalHits), vec2(offs , 110));
+	TextRenderSingleton::Instance()->renderText("GEN #" + toString(generations), vec2(offs , 140));
+    TextRenderSingleton::Instance()->renderText("DIST #" + toString(recordDistance), vec2(offs , 170));
+    TextRenderSingleton::Instance()->renderText("FRAME #" + toString(getElapsedFrames()), vec2(offs , 200));
+    
+    
+    // Draw the interface
+    mParams->draw();
+
 }
 
 CINDER_APP( BabyMApp, RendererGl )
