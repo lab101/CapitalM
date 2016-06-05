@@ -119,7 +119,7 @@ void BabyMApp::setup()
     
     // Create the interface and give it a name.
     mParams = params::InterfaceGl::create( getWindow(), "App parameters", toPixels( ivec2( 200, 300 ) ) );
-    mParams->setPosition(vec2(GS()->mScreen.x2 +550,300));
+    mParams->setPosition(vec2(GS()->mScreen.x2 +250,300));
     
     
     // Setup some basic parameters.
