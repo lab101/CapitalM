@@ -16,6 +16,7 @@
 #include "Dot.hpp"
 #include "EmmiterData.hpp"
 #include "cinder/Rect.h"
+#include "ci_nanovg_gl.hpp"
 
 class TestSet{
 
@@ -32,7 +33,9 @@ public:
     void randomize(int frames);
     void setup();
     void update(cinder::vec2& gravity);
-    void draw(int textOffset,bool background);
+    void drawDots(std::shared_ptr<ci::nvg::Context> nvgContext,float radius);
+    void drawEmitters(std::shared_ptr<ci::nvg::Context> nvgContext);
+    void drawConnections(std::shared_ptr<ci::nvg::Context> nvgContext,float width);
     
     void setNewData(EmitterData e);
     void applyForces(Dot& d,int dataIndex);

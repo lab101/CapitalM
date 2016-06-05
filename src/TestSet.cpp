@@ -31,26 +31,6 @@ void TestSet::setup(){
     }
 
     
-//    Dot d19;
-//    d19.setup(vec2(304, 500), vec2(354, 583), ci::Color(1.0, .8, 0.9));
-//    dots.push_back(d19);
-//
-//
-//    Dot d20;
-//    d20.setup(vec2(384, 200), vec2(384, 617), ci::Color(1.0, .8, 0.9));
-//    dots.push_back(d20);
-//
-//    
-//    Dot d21;
-//    d21.setup(vec2(324, 600), vec2(373, 748), ci::Color(.4, .1, 0.9));
-//    dots.push_back(d21);
-
-//    // left under
-//    Dot d22;
-//    d22.setup(vec2(124, 869), vec2(354, 869), ci::Color(.8, .8, 0.1));
-//    dots.push_back(d22);
-
-    
     // left under
     Dot d4;
     d4.setup(vec2(184, 704), vec2(206, 868), ci::Color(1.0, 0.2, 0));
@@ -60,7 +40,7 @@ void TestSet::setup(){
     Dot d1;
     d1.setup(vec2(304,704), vec2(208,238), ci::Color(0, 1, 1));
     dots.push_back(d1);
-    
+
     // middle
     Dot d3;
     d3.setup(vec2(420,704), vec2(446, 478), ci::Color(0.5, 1, 0));
@@ -70,7 +50,7 @@ void TestSet::setup(){
 	Dot d2;
 	d2.setup(vec2(637, 704), vec2(686, 240), ci::Color(0, 0, 1));
 	dots.push_back(d2);
-//
+
     // bottom right
 	Dot d5;
 	d5.setup(vec2(690, 704), vec2(691, 872), ci::Color(1.0, 0.5, 0.3));
@@ -241,50 +221,81 @@ void TestSet::applyForces(Dot& dot,int dataIndex){
 }
 
 
-
-void TestSet::draw(int textOffset,bool background){
-
+void TestSet::drawEmitters(std::shared_ptr<ci::nvg::Context> nvgContext){
     
-    //lmap<float>(recordDistance, 400, 0, 0.1, 3);
-	
-	//if (lineWidth < 0) lineWidth = 0.1;
+    auto& vg = *nvgContext;
 
+    //draw emmitters
+    for(auto& e : emmitters){
+        
+        vg.strokeWidth(3);
+        vg.beginPath();
 
-	//float alpha = lmap<float>(recordDistance, 2000, 0, 0.1, 1);
-	//gl::lineWidth(14);
-    
-    if(GS()->isBackgroundDrawingOff && background) return;
+        
+        
+        
+        for(float f=0; f < e.mForce; f+= 6.0){
+            vg.strokeColor(ColorAf{.0f, .8f, .9f});
+            //vg.fillColor(ColorAf(0,0.3,0.1,0.5));
 
-    if(!background ){
-
-        for(auto& e : emmitters){
-            gl::color(1, 1, 1, 0.2);
-
-            gl::drawSolidCircle(e.mPosition, fmax(e.mForce,4));
+        
+            vg.arc(e.mPosition , f, -M_PI * 0.1f,  M_PI * 1.0f, NVG_CW);
             
-            gl::color(1, 1, 1, 0.6);
-            gl::drawStrokedCircle(e.mPosition, fmax(e.mForce,4),8,28);
-        }
-    }
-    
-    for(int i = 0; i < dots.size(); ++i){
-        
-        if(i > 0 ){
-            gl::color(1, 1, 1, background ? 0.4 : 1);
-            gl::drawLine(dots[i-1].mPosition, dots[i].mPosition);
+
         }
         
-		dots[i].draw(!background);
+        vg.closePath();
+        //
+        vg.stroke();
+
+        
+//    //    vg.fill();
+//        
+//        
+//        vg.beginPath();
+//        vg.arc(e.mPosition , e.mForce , -M_PI * 0.5f,  M_PI * 2.0f, NVG_CW);
+//        vg.closePath();
+//        
+//        vg.stroke();
+
+        
     }
+}
 
 
+void TestSet::drawConnections(std::shared_ptr<ci::nvg::Context> nvgContext,float width){
     
-	if (recordDistance< 250) gl::drawString("l:" + to_string((int) recordDistance), vec2(800, 10 + textOffset));
+    auto& vg = *nvgContext;
+    vg.strokeWidth(width);
+
+    vg.beginPath();
+    vg.moveTo(dots[0].mPosition);
+
+    for(int i = 1; i < dots.size(); ++i){
+        vg.lineTo(dots[i].mPosition);
+    }
     
-    int f = fitness*10000000000000;
-    if(f>0) gl::drawString(to_string(f), vec2(900,10 + textOffset));
+  //  vg.closePath();
+    vg.stroke();
+
     
-    
+}
+
+
+
+
+
+void TestSet::drawDots(std::shared_ptr<ci::nvg::Context> nvgContext,float radius){
+    auto& vg = *nvgContext;
+
+        //draw dots
+        for(int i = 0; i < dots.size(); ++i){
+            
+            vg.beginPath();
+            vg.arc(dots[i].mPosition , 4, -M_PI * 0.5f,  M_PI * 2.0f, NVG_CW);
+            vg.closePath();
+            vg.stroke();
+        }
 }
 
 

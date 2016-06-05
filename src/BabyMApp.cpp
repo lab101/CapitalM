@@ -12,12 +12,18 @@
 #include "cinder/params/Params.h"
 #include "SettingManager.h"
 
+
+#include "ci_nanovg_gl.hpp"
+
 using namespace ci;
 using namespace ci::app;
 using namespace std;
 
 class BabyMApp : public App {
   
+    
+    std::shared_ptr<nvg::Context> mNanoVG;
+
 public:
     
 	void setup() override;
@@ -51,12 +57,15 @@ public:
 	TestSet* bestSet;
     params::InterfaceGlRef	mParams;
 
+    vector<int> shadows;
     
     gl::TextureRef  building;
     
     vector<EmitterData> matingPool;
     
     ci::vec2 mousePos;
+    
+
 };
 
 void BabyMApp::setup()
@@ -66,16 +75,23 @@ void BabyMApp::setup()
     string replayFile = "";
     
     
-    
+    mNanoVG = std::make_shared<nvg::Context>(nvg::createContextGL());
+
     if(replayFile != ""){
         mutation = 0;
         testSetsAmount = 1;
         lock = true;
 
     }else{
-        testSetsAmount = 400;
+        testSetsAmount = 1050;
         mutation = 0.001;
         lock = true;
+    }
+    
+    
+    int offset = testSetsAmount /10;
+    for (int i =0; i < testSetsAmount; i+=offset) {
+        shadows.push_back(i);
     }
     
     
@@ -99,12 +115,11 @@ void BabyMApp::setup()
     }
     
 
-	start();
     
     
     // Create the interface and give it a name.
     mParams = params::InterfaceGl::create( getWindow(), "App parameters", toPixels( ivec2( 200, 300 ) ) );
-    mParams->setPosition(vec2(GS()->mScreen.x2 +50,300));
+    mParams->setPosition(vec2(GS()->mScreen.x2 +550,300));
     
     
     // Setup some basic parameters.
@@ -116,6 +131,14 @@ void BabyMApp::setup()
     
     mParams->addParam( "lerpBallVelocity", &(GS()->lerpBallVelocity)).min( 0.0001f ).max( 10.0f ).precision( 6 ).step( 0.001f );
     mParams->addParam( "isBackgroundDrawingOff", &(GS()->isBackgroundDrawingOff));
+    
+    
+    start();
+    
+//    while(isRunning){
+//        update();
+//    }
+
     
 }
 
@@ -224,7 +247,16 @@ void BabyMApp::update()
             
             
             if(t.isHitTarget && lock){
-                t.dumpData("emmitterData" + toString(getElapsedFrames()) +".csv");
+                
+                string fileName = "emmitterData" + toString(getElapsedFrames());
+                t.dumpData(fileName + ".csv");
+                
+                
+                int i=0;
+                for(int s : shadows){
+                    testSets[s].dumpData("_s" + toString(++i) + "_" + fileName + ".csv");
+                }
+                
                 isRunning = false;
                 return;
             }
@@ -299,28 +331,65 @@ void BabyMApp::draw()
     
     gl::color(0.5, 0.5, 0.5);
     gl::draw(building);
-    
+    gl::color(1, 1, 1);
 
-    int textOffset=0;
-    for(auto& t : testSets){
-        t.draw(textOffset,true);
-        textOffset+=10;
-    }
+    
+    if(!GS()->isBackgroundDrawingOff){
+
+
+    // Store a reference so we can use dot-notation.
+    auto& vg = *mNanoVG;
+
+        for(int s : shadows){
+            
+            vg.strokeColor(Color{.8f, .8f, .8f});
+
+            testSets[s].drawConnections(mNanoVG,0.5);
+
+            vg.strokeWidth(2);
+            vg.strokeColor(Color(1,1,1));
+
+            testSets[s].drawDots(mNanoVG, 4);
+        }
+    
+    
+    
 
 	if (bestSet != nullptr){
-		bestSet->draw(0,false);
+        
+        vg.strokeColor(Color{1.0f, 1.f, 1.f});
+
+        bestSet->drawConnections(mNanoVG,8);
+        bestSet->drawEmitters(mNanoVG);
+
+        for(auto& d : bestSet->dots){
+            
+            vg.beginPath();
+            vg.strokeWidth(14);
+
+            vg.fillColor(Color(1,0,0));
+            vg.strokeColor(Color(1,1,1));
+
+            vg.arc(d.mPosition , 10, -M_PI * 0.5f,  M_PI * 2.0f, NVG_CW);
+            vg.closePath();
+            vg.fill();
+            vg.stroke();
+
+        }
 	}
     
-    gl::color(1, 0, 0);
-    gl::drawStrokedRect(GS()->mScreen, 1);
+    
+    gl::color(1, 1, 1);
+
+    vg.beginFrame(getWindowSize(), getWindowContentScale());
+    vg.endFrame();
+    
     
     gl::color(0, 0, 0);
     gl::drawSolidRect(Rectf(GS()->mScreen.x2,0,getWindowWidth(),getWindowHeight()));
     
-    gl::color(1, 1, 1);
-
+    }
     
-
     int offs = GS()->mScreen.x2 + 60;
     //int f = totalFitness * 10000000000;
     //gl::drawString("total fitness \t" + toString(f), vec2(900,20));
@@ -339,6 +408,11 @@ void BabyMApp::draw()
     // Draw the interface
     mParams->draw();
 
+
 }
 
-CINDER_APP( BabyMApp, RendererGl )
+CINDER_APP(BabyMApp, RendererGl(RendererGl::Options().stencil().msaa(0)),
+           [](App::Settings *settings) { settings->setHighDensityDisplayEnabled(); })
+
+
+//CINDER_APP( BabyMApp, RendererGl )
