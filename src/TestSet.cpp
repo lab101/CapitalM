@@ -31,6 +31,9 @@ void TestSet::setup(){
     }
 
     
+    emmitters.push_back(Emitter(vec2(451,100),f));
+
+    
     // left under
     Dot d4;
     d4.setup(vec2(184, 704), vec2(206, 868), ci::Color(1.0, 0.2, 0));
@@ -228,25 +231,26 @@ void TestSet::drawEmitters(std::shared_ptr<ci::nvg::Context> nvgContext){
     //draw emmitters
     for(auto& e : emmitters){
         
-        vg.strokeWidth(3);
-        vg.beginPath();
 
         
-        
-        
         for(float f=0; f < e.mForce; f+= 6.0){
+            vg.beginPath();
+
             vg.strokeColor(ColorAf{.0f, .8f, .9f});
             //vg.fillColor(ColorAf(0,0.3,0.1,0.5));
 
-        
-            vg.arc(e.mPosition , f, -M_PI * 0.1f,  M_PI * 1.0f, NVG_CW);
-            
+            float s = lmap<float>(f, 0, e.mForce, 4, 1);
+            if(s < 0) s =1;
+            vg.strokeWidth(s);
+
+            vg.arc(e.mPosition , f,f*3, f*3+ (M_PI * 1.96), NVG_CW);
+         //   vg.closePath();
+            vg.stroke();
+
 
         }
         
-        vg.closePath();
         //
-        vg.stroke();
 
         
 //    //    vg.fill();
