@@ -31,24 +31,24 @@ void TestSet::setup(){
     }
 
     
-    Dot d19;
-    d19.setup(vec2(304, 500), vec2(354, 583), ci::Color(1.0, .8, 0.9));
-    dots.push_back(d19);
+//    Dot d19;
+//    d19.setup(vec2(304, 500), vec2(354, 583), ci::Color(1.0, .8, 0.9));
+//    dots.push_back(d19);
+//
+//
+//    Dot d20;
+//    d20.setup(vec2(384, 200), vec2(384, 617), ci::Color(1.0, .8, 0.9));
+//    dots.push_back(d20);
+//
+//    
+//    Dot d21;
+//    d21.setup(vec2(324, 600), vec2(373, 748), ci::Color(.4, .1, 0.9));
+//    dots.push_back(d21);
 
-
-    Dot d20;
-    d20.setup(vec2(384, 200), vec2(384, 617), ci::Color(1.0, .8, 0.9));
-    dots.push_back(d20);
-
-    
-    Dot d21;
-    d21.setup(vec2(324, 600), vec2(373, 748), ci::Color(.4, .1, 0.9));
-    dots.push_back(d21);
-
-    // left under
-    Dot d22;
-    d22.setup(vec2(124, 869), vec2(354, 869), ci::Color(.8, .8, 0.1));
-    dots.push_back(d22);
+//    // left under
+//    Dot d22;
+//    d22.setup(vec2(124, 869), vec2(354, 869), ci::Color(.8, .8, 0.1));
+//    dots.push_back(d22);
 
     
     // left under
@@ -68,12 +68,12 @@ void TestSet::setup(){
     
     //top right
 	Dot d2;
-	d2.setup(vec2(537, 704), vec2(686, 240), ci::Color(0, 0, 1));
+	d2.setup(vec2(637, 704), vec2(686, 240), ci::Color(0, 0, 1));
 	dots.push_back(d2);
 //
     // bottom right
 	Dot d5;
-	d5.setup(vec2(520, 704), vec2(691, 872), ci::Color(1.0, 0.5, 0.3));
+	d5.setup(vec2(690, 704), vec2(691, 872), ci::Color(1.0, 0.5, 0.3));
 	dots.push_back(d5);
 
     
@@ -84,9 +84,6 @@ void TestSet::setup(){
 
 void TestSet::setNewData(EmitterData e){
     emmitterData = e;
-    
-
-    
 }
 
 
@@ -164,7 +161,7 @@ void TestSet::update(vec2& gravity){
         isHitTarget *= distance < 10;
         limitSpeed(d);
         
-        d.mVelocity = vLerp(d.mVelocity, vec2(0,0), 0.09);
+        d.mVelocity = vLerp(d.mVelocity, vec2(0,0), GS()->lerpBallVelocity);
         d.mDirection = vLerp(d.mDirection, gravity, 0.1);
 
         d.update();
@@ -179,9 +176,9 @@ void TestSet::update(vec2& gravity){
 
 
 void TestSet::limitSpeed(Dot& dot){
-    if(length(dot.mVelocity) > 20){
+    if(length(dot.mVelocity) > GS()->maxSpeed){
         vec2 n = normalize(dot.mVelocity);
-        dot.mVelocity = n * 20.0f;
+        dot.mVelocity = n *  GS()->maxSpeed;
     }
 }
 
@@ -234,7 +231,7 @@ void TestSet::applyForces(Dot& dot,int dataIndex){
         float forceFactor = lmap<float>(length, 0, e->mForce, 2.0, 1);
         forceFactor = fmax(forceFactor,0);
         
-        forceFactor = pow(forceFactor, 2);
+        forceFactor = pow(forceFactor, 1.4);
         //  forceFactor *= 1.6;
         // cout << forceFactor << endl;
         

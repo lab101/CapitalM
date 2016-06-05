@@ -66,7 +66,6 @@ void BabyMApp::setup()
     string replayFile = "";
     
     
-    GS()->gravity = vec2(0,0.1);
     
     if(replayFile != ""){
         mutation = 0;
@@ -74,7 +73,7 @@ void BabyMApp::setup()
         lock = true;
 
     }else{
-        testSetsAmount = 1000;
+        testSetsAmount = 400;
         mutation = 0.001;
         lock = true;
     }
@@ -113,6 +112,9 @@ void BabyMApp::setup()
 
     mParams->addParam( "lerpTargetForce", &(GS()->lerpTargetForce)).min( 0.001f ).max( 0.9f ).precision( 10 ).step( 0.0001f );
     mParams->addParam( "lerpFalloffForce", &(GS()->lerpFalloffForce)).min( 0.000001f ).max( 0.9f ).precision( 10 ).step( 0.00001f );
+    mParams->addParam( "maxSpeed", &(GS()->maxSpeed)).min( 0.1f ).max( 20.0f ).precision( 4 ).step( 0.1f );
+    
+    mParams->addParam( "lerpBallVelocity", &(GS()->lerpBallVelocity)).min( 0.0001f ).max( 10.0f ).precision( 6 ).step( 0.001f );
     mParams->addParam( "isBackgroundDrawingOff", &(GS()->isBackgroundDrawingOff));
     
 }

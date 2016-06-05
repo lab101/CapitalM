@@ -18,9 +18,13 @@ using namespace ci;
 GlobalSettings::GlobalSettings(){
     
     
-    lerpFalloffForce    = 0.001;
-    lerpTargetForce     = 0.2;
-    isBackgroundDrawingOff = true;
+    lerpFalloffForce        = 0.001;
+    lerpTargetForce         = 0.2;
+    isBackgroundDrawingOff  = true;
+    maxSpeed                = 7;
+    gravity                 = vec2(0,0.06);
+    lerpBallVelocity        = 0.02;
+    
    // addSetting(&lerpFalloffForce);
 }
 

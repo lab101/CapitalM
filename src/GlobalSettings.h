@@ -20,6 +20,9 @@ public:
     
     float     lerpTargetForce;
     float     lerpFalloffForce;
+    float     lerpBallVelocity;
+    
+    float     maxSpeed;
     bool      isBackgroundDrawingOff;
     ci::vec2  gravity;
 
