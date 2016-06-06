@@ -61,7 +61,8 @@ public:
     
     gl::TextureRef  building;
     
-    vector<EmitterData> matingPool;
+    vector<EmitterData> emmiterDataCopy;
+    vector<EmitterData*> matingPool;
     
     ci::vec2 mousePos;
     
@@ -101,6 +102,8 @@ void BabyMApp::setup()
     
     
     testSets.reserve(testSetsAmount);
+    emmiterDataCopy.resize(testSetsAmount);
+    emmiterDataCopy.assign(testSetsAmount, EmitterData());
     
     GS()->mScreen.set(0, 0, building->getWidth(), building->getHeight());
     // GS()->mScreen.set(0, 0, 800, 600);
@@ -142,7 +145,6 @@ void BabyMApp::setup()
     
     while(isRunning && GS()->noDraw){
         update();
-//        if(generations % 4 ==0) draw();
     }
 
     
@@ -153,14 +155,18 @@ void BabyMApp::newSelection(){
     float maxFitness = getMaxFitness();
     
     matingPool.clear();
+    //emmiterDataCopy.clear();
     
+    for(int i =0; i < testSetsAmount; ++i)
+    {
+        
+        emmiterDataCopy[i] = (testSets[i].emmitterData);
 
-    for(auto& t : testSets){
-        float fitnessNormal = lmap<float>(t.fitness,0,maxFitness,0,1);
+        float fitnessNormal = lmap<float>(testSets[i].fitness,0,maxFitness,0,1);
         int n = (int) (fitnessNormal * 100);  // Arbitrary multiplier
 
         for (int j = 0; j < n; j++) {
-            matingPool.push_back(t.emmitterData);
+            matingPool.push_back(&(emmiterDataCopy[i]));
         }
     }
     
@@ -172,8 +178,8 @@ void BabyMApp::newSelection(){
         int m = int(randInt(matingPool.size()));
         int d = int(randInt(matingPool.size()));
         // Pick two parents
-        EmitterData mom = matingPool.at(m);
-        EmitterData dad = matingPool.at(d);
+        EmitterData mom = *matingPool.at(m);
+        EmitterData dad = *matingPool.at(d);
 
         // Mate their genes
         EmitterData child = mom.crossover(dad);
@@ -245,12 +251,17 @@ void BabyMApp::update()
 
     if(isRunning){
 
+        ++frames;
         
-        if(++frames == maxFrames){
+//        if(frames % 100){
+//                std::cout  << ".." << frames << "..";
+//        }
+
+        if(frames == maxFrames){
             
             stop();
             
-            std::cout << "GEN:" << generations << "\t\tDIST: " << recordDistance << "\t\tSELECTION pool size:" << matingPool.size() << "population \t" << testSetsAmount<<  endl;
+            std::cout << "\nGEN:" << generations << "\t\tDIST: " << recordDistance << "\t\tSELECTION pool size:" << matingPool.size() << "population \t" << testSetsAmount<<  endl;
 
             
             if(getTotalHits() > 0 && lock){
@@ -278,7 +289,7 @@ void BabyMApp::update()
 
                 if(!GS()->isReplay){
                     
-                    std::cout << "FOUND ONE AT gen " << generations << " : distance" << recordDistance << endl;
+                    std::cout << "\nFOUND ONE AT gen " << generations << " : distance" << recordDistance << endl;
 
                     int i=0;
                     

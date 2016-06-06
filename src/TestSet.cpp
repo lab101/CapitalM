@@ -367,7 +367,7 @@ void TestSet::drawDots(std::shared_ptr<ci::nvg::Context> nvgContext,float radius
 void TestSet::randomize(int frames){
     
     
-    ci::Perlin perlin = Perlin( 4,  clock() & 65535 );
+    //ci::Perlin perlin = Perlin( 4,  clock() & 65535 );
 ;
     int const eSize = emmitters.size();// emmitters.size();
     
@@ -377,9 +377,9 @@ void TestSet::randomize(int frames){
         emitterForces.reserve(eSize);
         
         for(float j=0; j< eSize;++j){
-            float n = fabs(perlin.noise(i * 0.01f, j ));
-            
-            emitterForces.push_back(fabs(n) * 260.0f);
+           // float n = fabs(perlin.noise(i * 0.01f, j ));
+           // emitterForces.push_back(fabs(n) * 260.0f);
+            emitterForces.push_back(ci::randFloat(0, 130));
         }
         
         emmitterData.data.push_back(emitterForces);
