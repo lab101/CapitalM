@@ -24,7 +24,10 @@ public:
     
     float     maxSpeed;
     bool      isBackgroundDrawingOff;
+    bool      isReplay;
     ci::vec2  gravity;
+    float mutation;
+
 
 	GlobalSettings();
     

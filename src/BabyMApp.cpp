@@ -44,7 +44,6 @@ public:
 
     long double totalFitness;
 	int recordDistance = 10000;
-    float mutation;
     
     int frames;
     int maxFrames       = 1050;
@@ -72,28 +71,30 @@ void BabyMApp::setup()
 {
     
     //string replayFile = "emmitterData8066.csv";
-    string replayFile = "";
+    string replayFile = "run1/emmitterData34096.csv";
     
     
     mNanoVG = std::make_shared<nvg::Context>(nvg::createContextGL());
 
-    if(replayFile != ""){
-        mutation = 0;
-        testSetsAmount = 1;
+    if(GS()->isReplay){
+        testSetsAmount = 10;
         lock = true;
-
+     
     }else{
         testSetsAmount = 1050;
-        mutation = 0.001;
         lock = true;
+        
+        int offset = testSetsAmount /10;
+        for (int i =0; i < testSetsAmount; i+=offset) {
+            shadows.push_back(i);
+        }
+        
+
     }
     
     
-    int offset = testSetsAmount /10;
-    for (int i =0; i < testSetsAmount; i+=offset) {
-        shadows.push_back(i);
-    }
     
+    setWindowPos(10, 10);
     
     building = gl::Texture::create(loadImage(loadAsset("building.png")));
     
@@ -107,12 +108,15 @@ void BabyMApp::setup()
     for(int i=0; i < testSetsAmount;++i){
         testSets.push_back(TestSet());
         testSets[i].setup();
-        if(replayFile != ""){
-            testSets[i].readData(replayFile);
+        
+        if(GS()->isReplay){
+            testSets.back().readData("run1/_s"+ toString(i)+ "_emmitterData34096.csv");
+            shadows.push_back(i);
         }else{
             testSets[i].randomize(maxFrames);
         }
     }
+
     
 
     
@@ -135,9 +139,9 @@ void BabyMApp::setup()
     
     start();
     
-//    while(isRunning){
-//        update();
-//    }
+    while(isRunning){
+        update();
+    }
 
     
 }
@@ -175,7 +179,7 @@ void BabyMApp::newSelection(){
 
         // Mate their genes
         EmitterData child = mom.crossover(dad);
-        child.mutate(mutation);
+        child.mutate(GS()->mutation);
         
         testSets[i].setNewData(child);
     }
@@ -201,19 +205,18 @@ void BabyMApp::start(){
 
 void BabyMApp::mouseDown( MouseEvent event )
 {
-//    dot.mPosition = event.getPos();
-//    dot.mVelocity = ci::vec2(0,0);
-//    dot.mDirection = ci::vec2(0,0);
     mousePos = event.getPos();
 }
 
 
+
+
 void BabyMApp::keyDown( KeyEvent event ){
     if(event.getCode() == event.KEY_UP){
-        mutation += 0.005;
+        GS()->mutation += 0.005;
     }
 	if (event.getCode() == event.KEY_DOWN){
-		mutation -= 0.005;
+		GS()->mutation -= 0.005;
 	}
 	if (event.getCode() == event.KEY_l){
 		lock = !lock;
@@ -235,6 +238,23 @@ void BabyMApp::update()
 
     if(isRunning){
 
+        
+        if(++frames == maxFrames){
+            std::cout << "GEN:" << generations << "\tDIST: " << recordDistance << "\tSELECTION pool size:" << matingPool.size() << endl;
+
+            for(auto& t : testSets){
+                t.stop();
+            }
+            
+            if(getTotalHits() > 0 && lock){
+                isRunning = false;
+                
+            }else{
+                newSelection();
+                start();
+            }
+        }
+
 
 		int lowestDistance = 10000;
 		for (auto& t : testSets){
@@ -243,41 +263,37 @@ void BabyMApp::update()
 			if (t.recordDistance < lowestDistance){
 				lowestDistance = t.recordDistance;
 				bestSet = &t;
+                
 			}
             
             
-            if(t.isHitTarget && lock){
-                
-                string fileName = "emmitterData" + toString(getElapsedFrames());
-                t.dumpData(fileName + ".csv");
-                
-                
-                int i=0;
-                for(int s : shadows){
-                    testSets[s].dumpData("_s" + toString(++i) + "_" + fileName + ".csv");
+            if(t.isHitTarget && lock && !GS()->isReplay){
+
+                if(!GS()->isReplay){
+                    
+                    std::cout << "FOUND ONE AT gen " << generations << " : distance" << recordDistance << endl;
+
+                    int i=0;
+                    
+                    string fileName = "_s" + toString(i) + "_emmitterData" + toString(getElapsedFrames()) + ".csv";
+                    t.dumpData(fileName );
+                    
+                    for(int s : shadows){
+                        string fileName = "_s" + toString(++i) + "_emmitterData" + toString(getElapsedFrames()) + ".csv";
+                        testSets[s].dumpData( fileName + ".csv");
+                    }
+                    
+                    isRunning = false;
+                    return;
+
+                }else{
+                   // isRunning = false;
+                    return;
                 }
                 
-                isRunning = false;
-                return;
             }
 		}
 
-        if(++frames == maxFrames){
-            for(auto& t : testSets){
-                t.stop();
-            }
-            
-
-
-            if(getTotalHits() > 0 && lock){
-				isRunning = false;
-
-            }else{
-				newSelection();
-				start();
-            }
- 
-        }
         
     }
 }
@@ -294,6 +310,7 @@ float BabyMApp::getMaxFitness(){
     return max;
 }
 
+
 long double BabyMApp::getTotalFitness(){
     long double fit = 0;
     for(auto& t : testSets){
@@ -302,6 +319,7 @@ long double BabyMApp::getTotalFitness(){
     
     return fit;
 }
+
 
 int BabyMApp::getTotalHits(){
     int fit = 0;
@@ -312,12 +330,12 @@ int BabyMApp::getTotalHits(){
     return fit;
 }
 
+
 int BabyMApp::getRecordDistance(){
 	int fit = 100000;
 	for (auto& t : testSets){
 		if (t.recordDistance < fit) fit = t.recordDistance;
 	}
-
 	return fit;
 }
 
@@ -332,7 +350,6 @@ void BabyMApp::draw()
     gl::color(0.5, 0.5, 0.5);
     gl::draw(building);
     gl::color(1, 1, 1);
-
     
     if(!GS()->isBackgroundDrawingOff){
 
@@ -340,40 +357,43 @@ void BabyMApp::draw()
     // Store a reference so we can use dot-notation.
     auto& vg = *mNanoVG;
 
-        for(int s : shadows){
+    for(int s : shadows){
             
-            vg.strokeColor(Color{.8f, .8f, .8f});
+        vg.strokeColor(Color{.8f, .8f, .8f});
+        testSets[s].drawConnections(mNanoVG,0.8);
 
-            testSets[s].drawConnections(mNanoVG,0.5);
+        vg.strokeWidth(2);
+        vg.strokeColor(Color(1,1,1));
 
-            vg.strokeWidth(2);
-            vg.strokeColor(Color(1,1,1));
-
-            testSets[s].drawDots(mNanoVG, 4);
-        }
+        testSets[s].drawDots(mNanoVG, 4);
+    }
     
     
     
 
 	if (bestSet != nullptr){
         
-        vg.strokeColor(Color{1.0f, 1.f, 1.f});
 
-        bestSet->drawConnections(mNanoVG,8);
+        vg.strokeColor(ColorAf{244  / 255.0f, 1.f, .0f});
+
+        bestSet->drawConnections(mNanoVG,4);
         bestSet->drawEmitters(mNanoVG);
 
         for(auto& d : bestSet->dots){
             
+           // float s = lmap<float>(d.getSpeed(), 0, 6, 0, 20);
+
             vg.beginPath();
-            vg.strokeWidth(14);
+            vg.strokeWidth(8);
 
             vg.fillColor(Color(1,0,0));
-            vg.strokeColor(Color(1,1,1));
+            vg.strokeColor(ColorAf{204  / 255.0f, 1.f, .0f});
 
             vg.arc(d.mPosition , 10, -M_PI * 0.5f,  M_PI * 2.0f, NVG_CW);
             vg.closePath();
-            vg.fill();
             vg.stroke();
+            
+
 
         }
 	}
@@ -394,7 +414,7 @@ void BabyMApp::draw()
     //int f = totalFitness * 10000000000;
     //gl::drawString("total fitness \t" + toString(f), vec2(900,20));
 	gl::drawString("pool size \t" + toString(matingPool.size()), vec2(offs, 35));
-    gl::drawString("mutation \t" + toString(mutation), vec2(offs,50));
+    gl::drawString("mutation \t" + toString(GS()->mutation), vec2(offs,50));
     gl::drawString("population \t" + toString(testSetsAmount), vec2(offs,65));
   //  gl::drawString("pool size " + toString(matingPool.size()), vec2(500,50));
     gl::drawString("mouse\t" + toString(mousePos), vec2(offs, 80));
@@ -402,7 +422,7 @@ void BabyMApp::draw()
 	TextRenderSingleton::Instance()->renderText("HITS #" + toString(totalHits), vec2(offs , 110));
 	TextRenderSingleton::Instance()->renderText("GEN #" + toString(generations), vec2(offs , 140));
     TextRenderSingleton::Instance()->renderText("DIST #" + toString(recordDistance), vec2(offs , 170));
-    TextRenderSingleton::Instance()->renderText("FRAME #" + toString(getElapsedFrames()), vec2(offs , 200));
+    TextRenderSingleton::Instance()->renderText("FRAME #" + toString(bestSet->lifeTime), vec2(offs , 200));
     
     
     // Draw the interface

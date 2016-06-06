@@ -20,12 +20,13 @@ GlobalSettings::GlobalSettings(){
     
     lerpFalloffForce        = 0.001;
     lerpTargetForce         = 0.2;
-    isBackgroundDrawingOff  = true;
+    isBackgroundDrawingOff  = false;
     maxSpeed                = 7;
     gravity                 = vec2(0,0.06);
     lerpBallVelocity        = 0.02;
-    
-   // addSetting(&lerpFalloffForce);
+    isReplay                = false;
+    mutation                = 0.0016;
+
 }
 
 

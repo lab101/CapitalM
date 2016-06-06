@@ -36,7 +36,8 @@ public:
     
     void resetPosition();
     void resetForces();
-    
+    float getSpeed();
+
 };
 
 #endif /* Dot_hpp */

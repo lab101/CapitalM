@@ -42,7 +42,11 @@ void Dot::resetPosition(){
 void Dot::resetForces(){
     mVelocity = vec2(0,0);
     mDirection = vec2(0,0);
-    
+}
+
+
+float Dot::getSpeed(){
+    return length(mVelocity);
 }
 
 

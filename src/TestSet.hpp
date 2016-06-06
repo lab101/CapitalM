@@ -47,6 +47,8 @@ public:
     void stop();
     
     int lifeTime;
+    int currentFrame;
+    
     long double fitness = 0;
     float recordDistance = 1000;
     

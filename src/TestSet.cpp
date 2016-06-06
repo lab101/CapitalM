@@ -88,6 +88,7 @@ void TestSet::start(){
     isHitTarget = false;
     lifeTime = 0;
 	recordDistance = 10000;
+
     for (auto& d : dots){
         d.resetForces();
         d.resetPosition();
@@ -116,7 +117,6 @@ void TestSet::update(vec2& gravity){
     
     if(!isRunning) return;
     
-    ++lifeTime;
     
     
     isHitTarget = true;
@@ -126,8 +126,7 @@ void TestSet::update(vec2& gravity){
     for(int i = 0; i < emmitters.size();++i){
         
         Emitter* e = &emmitters[i];
-        int dataIndex = getElapsedFrames() % emmitterData.data.size();
-        e->mTargetForce = emmitterData.data[dataIndex][i];
+        e->mTargetForce = emmitterData.data[lifeTime][i];
         e->update();
     }
     
@@ -153,6 +152,10 @@ void TestSet::update(vec2& gravity){
 	if (combinedDistance < recordDistance) recordDistance = combinedDistance;
 
     if(isHitTarget) stop();
+    
+    
+    ++lifeTime;
+
     
 }
 
@@ -231,40 +234,25 @@ void TestSet::drawEmitters(std::shared_ptr<ci::nvg::Context> nvgContext){
     //draw emmitters
     for(auto& e : emmitters){
         
-
         
-        for(float f=0; f < e.mForce; f+= 6.0){
+        for(float f=0; f < e.mForce; f+= 26.0){
             vg.beginPath();
 
             vg.strokeColor(ColorAf{.0f, .8f, .9f});
-            //vg.fillColor(ColorAf(0,0.3,0.1,0.5));
 
-            float s = lmap<float>(f, 0, e.mForce, 4, 1);
+            float s = lmap<float>(f, 0, e.mForce, 40, 1);
             if(s < 0) s =1;
             vg.strokeWidth(s);
 
-            vg.arc(e.mPosition , f,f*3, f*3+ (M_PI * 1.96), NVG_CW);
+            vg.arc(e.mPosition , f,0, (M_PI * 2), NVG_CW);
          //   vg.closePath();
             vg.stroke();
 
 
         }
-        
-        //
-
-        
-//    //    vg.fill();
-//        
-//        
-//        vg.beginPath();
-//        vg.arc(e.mPosition , e.mForce , -M_PI * 0.5f,  M_PI * 2.0f, NVG_CW);
-//        vg.closePath();
-//        
-//        vg.stroke();
-
-        
     }
 }
+
 
 
 void TestSet::drawConnections(std::shared_ptr<ci::nvg::Context> nvgContext,float width){
@@ -273,13 +261,13 @@ void TestSet::drawConnections(std::shared_ptr<ci::nvg::Context> nvgContext,float
     vg.strokeWidth(width);
 
     vg.beginPath();
-    vg.moveTo(dots[0].mPosition);
-
+    
     for(int i = 1; i < dots.size(); ++i){
-        vg.lineTo(dots[i].mPosition);
+        vec2 norm = glm::normalize(dots[i].mPosition - dots[i-1].mPosition);
+        vg.moveTo(dots[i-1].mPosition + (norm * 20.0f));
+        vg.lineTo(dots[i].mPosition - (norm * 20.0f));
     }
     
-  //  vg.closePath();
     vg.stroke();
 
     
@@ -320,7 +308,7 @@ void TestSet::randomize(int frames){
         for(float j=0; j< eSize;++j){
             float n = fabs(perlin.noise(i * 0.01f, j ));
             
-            emitterForces.push_back(fabs(n) * 320.0f);
+            emitterForces.push_back(fabs(n) * 260.0f);
         }
         
         emmitterData.data.push_back(emitterForces);
