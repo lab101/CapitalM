@@ -211,7 +211,7 @@ void TestSet::update(vec2& gravity){
 		combinedDistance += distance;
 
 
-        isHitTarget *= distance < 10;
+        isHitTarget *= distance < 14;
         limitSpeed(d);
         
         d.mVelocity = vLerp(d.mVelocity, vec2(0,0), GS()->lerpBallVelocity);
@@ -288,7 +288,7 @@ void TestSet::applyForces(Dot& dot,int dataIndex){
         float forceFactor = lmap<float>(length, 0, e->mForce, 2.0, 1);
         forceFactor = fmax(forceFactor,0);
         
-        forceFactor = pow(forceFactor, 1.4);
+        forceFactor = pow(forceFactor, 1.45);
         //  forceFactor *= 1.6;
         // cout << forceFactor << endl;
         
@@ -364,10 +364,10 @@ void TestSet::drawDots(std::shared_ptr<ci::nvg::Context> nvgContext,float radius
 
 
 
-void TestSet::randomize(int frames){
+void TestSet::randomize(int frames,int rndIndex){
     
     
-    //ci::Perlin perlin = Perlin( 4,  clock() & 65535 );
+    ci::Perlin perlin = Perlin( 4,  clock() & 65535 );
 ;
     int const eSize = emmitters.size();// emmitters.size();
     
@@ -377,9 +377,9 @@ void TestSet::randomize(int frames){
         emitterForces.reserve(eSize);
         
         for(float j=0; j< eSize;++j){
-           // float n = fabs(perlin.noise(i * 0.01f, j ));
-           // emitterForces.push_back(fabs(n) * 260.0f);
-            emitterForces.push_back(ci::randFloat(0, 130));
+            float n = fabs(perlin.noise(i * 0.01f, j + (frames*1000) ));
+            
+            emitterForces.push_back(fabs(n) * 260.0f);
         }
         
         emmitterData.data.push_back(emitterForces);

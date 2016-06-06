@@ -30,7 +30,7 @@ public:
     std::vector<Emitter> emmitters;
     std::vector<Dot> dots;
 
-    void randomize(int frames);
+    void randomize(int frames,int rndIndex);
     void setup();
     void update(cinder::vec2& gravity);
     void drawDots(std::shared_ptr<ci::nvg::Context> nvgContext,float radius);

@@ -117,7 +117,7 @@ void BabyMApp::setup()
             testSets.back().readData("run3/_s"+ toString(i)+ "_emmitterData2081.csv");
             shadows.push_back(i);
         }else{
-            testSets[i].randomize(maxFrames);
+            testSets[i].randomize(maxFrames,i);
         }
     }
 
