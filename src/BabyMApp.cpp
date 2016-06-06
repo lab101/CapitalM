@@ -98,7 +98,7 @@ void BabyMApp::setup()
     
     setWindowPos(10, 10);
     
-    building = gl::Texture::create(loadImage(loadAsset("building.png")));
+    building = gl::Texture::create(loadImage(loadAsset("building.jpg")));
     
     
     testSets.reserve(testSetsAmount);
@@ -378,7 +378,7 @@ void BabyMApp::draw()
     for(int s : shadows){
             
         vg.strokeColor(Color{.8f, .8f, .8f});
-        testSets[s].drawConnections(mNanoVG,0.8);
+       // testSets[s].drawConnections(mNanoVG,0.8);
 
         vg.strokeWidth(2);
         vg.strokeColor(Color(1,1,1));

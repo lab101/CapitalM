@@ -26,8 +26,8 @@ GlobalSettings::GlobalSettings(){
     lerpBallVelocity        = 0.02;
     isReplay                = false;
     mutation                = 0.0006;
-    noDraw                  = true;
-    testSetMax              = 150000;
+    noDraw                  = false;
+    testSetMax              = 25;
 }
 
 

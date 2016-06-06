@@ -67,71 +67,7 @@ void TestSet::setup(){
     // left bottom
     dots.push_back(Dot(vec2(550, 107),  vec2(left, bottom), c));
 
-    
-    //    dots.push_back(Dot(vec2(352, 304),  vec2(520, 748), c));
-    //    dots.push_back(Dot(vec2(84, 504),   vec2(520, 611), c));
-    //    dots.push_back(Dot(vec2(84, 504),   vec2(542, 591), c));
-
-   // dots.push_back(Dot(vec2(194, 604),  vec2(358, bottom), c));
-    
-    
-//    //left under
-//    dots.push_back(Dot(vec2(182, 704),  vec2(182, bottom), c));
-//    
-//    //top left
-//    dots.push_back(Dot(vec2(304,704),   vec2(208,238), c));
-//    
-//    // middle
-//    dots.push_back(Dot(vec2(420,704),   vec2(446, 478), c));
-//    
-//    // top right
-//    dots.push_back(Dot(vec2(637, 704),  vec2(686, 240), c));
-//    
-//    // top right
-//    dots.push_back(Dot(vec2(690, 704),  vec2(691, 872), c));
-//    
-//    
-//    //estra flap right
-
-    
-//
-//    // left under2
-//    Dot d4;
-//    d4.setup(vec2(84, 604), vec2(358, 748), ci::Color(1.0, 0.2, 0));
-//    dots.push_back(d4);
-//    
-//
-//    
-//    // left underup1
-//    Dot d42;
-//    d42.setup(vec2(194, 604), vec2(358, 870), ci::Color(1.0, 0.2, 0));
-//    dots.push_back(d42);
-//
-//
-//    // left under
-//    Dot d41;
-//    d41.setup(vec2(184, 704), vec2(206, 868), ci::Color(1.0, 0.2, 0));
-//    dots.push_back(d41);
-//
-//    // top left
-//    Dot d1;
-//    d1.setup(vec2(304,704), vec2(208,238), ci::Color(0, 1, 1));
-//    dots.push_back(d1);
-//
-//    // middle
-//    Dot d3;
-//    d3.setup(vec2(420,704), vec2(446, 478), ci::Color(0.5, 1, 0));
-//    dots.push_back(d3);
-//    
-//    //top right
-//	Dot d2;
-//	d2.setup(vec2(637, 704), vec2(686, 240), ci::Color(0, 0, 1));
-//	dots.push_back(d2);
-//
-//    // bottom right
-//	Dot d5;
-//	d5.setup(vec2(690, 704), vec2(691, 872), ci::Color(1.0, 0.5, 0.3));
-//	dots.push_back(d5);
+  
 }
 
 
@@ -329,17 +265,49 @@ void TestSet::drawEmitters(std::shared_ptr<ci::nvg::Context> nvgContext){
 void TestSet::drawConnections(std::shared_ptr<ci::nvg::Context> nvgContext,float width){
     
     auto& vg = *nvgContext;
-    vg.strokeWidth(width);
 
     vg.beginPath();
-    
+
     for(int i = 1; i < dots.size(); ++i){
-        vec2 norm = glm::normalize(dots[i].mPosition - dots[i-1].mPosition);
-        vg.moveTo(dots[i-1].mPosition + (norm * 20.0f));
-        vg.lineTo(dots[i].mPosition - (norm * 20.0f));
+        
+
+//        vg.strokeWidth(width);
+//        vg.beginPath();
+//
+//        vg.arc(dots[i].mTargetPosition , 10 ,0, (M_PI * 2), NVG_CW);
+//        vg.stroke();
+//
+
+//        vec2 norm = glm::normalize(dots[i].mPosition - dots[i-1].mPosition);
+//        vg.moveTo(dots[i-1].mPosition + (norm * 20.0f));
+//        vg.lineTo(dots[i].mPosition - (norm * 20.0f));
+
+
+        vg.moveTo(dots[i-1].mPosition );
+        vg.lineTo(dots[i].mPosition );
+
+//
+//
+//        norm = glm::normalize(dots[i].mPosition - dots[i].mTargetPosition);
+//
+//        vg.beginPath();
+//        
+//        vg.strokeWidth(1);
+//        
+//        vg.moveTo(dots[i].mPosition - (norm * 20.0f));
+//        vg.lineTo(dots[i].mTargetPosition + (norm * 20.0f));
+//        
+//        vg.stroke();
+//
+
     }
+    vg.closePath();
     
     vg.stroke();
+    vg.fill();
+
+
+    
 
     
 }
