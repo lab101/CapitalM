@@ -42,6 +42,7 @@ public:
     void checkBounderies(Dot& d);
     bool checkTarget(Dot& d);
     void limitSpeed(Dot& d);
+    void addDot(ci::vec2 start,ci::vec2 target);
     
     void start();
     void stop();

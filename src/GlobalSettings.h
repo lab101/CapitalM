@@ -26,10 +26,12 @@ public:
     bool      isBackgroundDrawingOff;
     bool      isReplay;
     ci::vec2  gravity;
-    float mutation;
-
-
+    float     mutation;
+    bool      noDraw;
+    int       testSetMax;
+    
 	GlobalSettings();
+    
     
     
 

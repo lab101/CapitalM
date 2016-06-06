@@ -34,6 +34,7 @@ public:
 	void draw() override;
     
     void start();
+    void stop();
     
     int getTotalHits();
     float getMaxFitness();
@@ -81,7 +82,7 @@ void BabyMApp::setup()
         lock = true;
      
     }else{
-        testSetsAmount = 1050;
+        testSetsAmount = GS()->testSetMax;
         lock = true;
         
         int offset = testSetsAmount /10;
@@ -110,7 +111,7 @@ void BabyMApp::setup()
         testSets[i].setup();
         
         if(GS()->isReplay){
-            testSets.back().readData("run1/_s"+ toString(i)+ "_emmitterData34096.csv");
+            testSets.back().readData("run3/_s"+ toString(i)+ "_emmitterData2081.csv");
             shadows.push_back(i);
         }else{
             testSets[i].randomize(maxFrames);
@@ -139,8 +140,9 @@ void BabyMApp::setup()
     
     start();
     
-    while(isRunning){
+    while(isRunning && GS()->noDraw){
         update();
+//        if(generations % 4 ==0) draw();
     }
 
     
@@ -150,10 +152,6 @@ void BabyMApp::setup()
 void BabyMApp::newSelection(){
     float maxFitness = getMaxFitness();
     
-    totalFitness = getTotalFitness();
-    totalHits = getTotalHits();
-	recordDistance = getRecordDistance();
-
     matingPool.clear();
     
 
@@ -198,8 +196,17 @@ void BabyMApp::start(){
     }
 
 	bestSet = &testSets[0];
+}
 
-  
+void BabyMApp::stop(){
+    
+    for(auto& t : testSets){
+        t.stop();
+    }
+
+    totalHits = getTotalHits();
+    recordDistance = getRecordDistance();
+    isRunning = false;
 }
 
 
@@ -224,7 +231,7 @@ void BabyMApp::keyDown( KeyEvent event ){
 	}
 
     if(event.getCode() == event.KEY_SPACE){
-       // newSelection();
+        newSelection();
         start();
 
     }
@@ -240,11 +247,11 @@ void BabyMApp::update()
 
         
         if(++frames == maxFrames){
-            std::cout << "GEN:" << generations << "\tDIST: " << recordDistance << "\tSELECTION pool size:" << matingPool.size() << endl;
+            
+            stop();
+            
+            std::cout << "GEN:" << generations << "\t\tDIST: " << recordDistance << "\t\tSELECTION pool size:" << matingPool.size() << "population \t" << testSetsAmount<<  endl;
 
-            for(auto& t : testSets){
-                t.stop();
-            }
             
             if(getTotalHits() > 0 && lock){
                 isRunning = false;
@@ -267,7 +274,7 @@ void BabyMApp::update()
 			}
             
             
-            if(t.isHitTarget && lock && !GS()->isReplay){
+            if(t.isHitTarget && lock ){
 
                 if(!GS()->isReplay){
                     
@@ -283,11 +290,11 @@ void BabyMApp::update()
                         testSets[s].dumpData( fileName + ".csv");
                     }
                     
-                    isRunning = false;
+                    stop();
                     return;
 
                 }else{
-                   // isRunning = false;
+                    stop();
                     return;
                 }
                 
@@ -373,28 +380,25 @@ void BabyMApp::draw()
 
 	if (bestSet != nullptr){
         
+        
+        Color bestColor = Color(244  / 255.0f, 1.f, .5f);
 
-        vg.strokeColor(ColorAf{244  / 255.0f, 1.f, .0f});
-
+        vg.strokeColor(bestColor);
         bestSet->drawConnections(mNanoVG,4);
         bestSet->drawEmitters(mNanoVG);
 
         for(auto& d : bestSet->dots){
             
            // float s = lmap<float>(d.getSpeed(), 0, 6, 0, 20);
-
             vg.beginPath();
             vg.strokeWidth(8);
 
             vg.fillColor(Color(1,0,0));
-            vg.strokeColor(ColorAf{204  / 255.0f, 1.f, .0f});
+            vg.strokeColor(bestColor);
 
             vg.arc(d.mPosition , 10, -M_PI * 0.5f,  M_PI * 2.0f, NVG_CW);
             vg.closePath();
             vg.stroke();
-            
-
-
         }
 	}
     
@@ -411,9 +415,12 @@ void BabyMApp::draw()
     }
     
     int offs = GS()->mScreen.x2 + 60;
-    //int f = totalFitness * 10000000000;
-    //gl::drawString("total fitness \t" + toString(f), vec2(900,20));
-	gl::drawString("pool size \t" + toString(matingPool.size()), vec2(offs, 35));
+    
+    gl::disableAlphaBlending();
+    gl::disableBlending();
+  //  gl::enableAlphaBlendingPremult();
+    
+    gl::drawString("pool size \t" + toString(matingPool.size()), vec2(offs, 35));
     gl::drawString("mutation \t" + toString(GS()->mutation), vec2(offs,50));
     gl::drawString("population \t" + toString(testSetsAmount), vec2(offs,65));
   //  gl::drawString("pool size " + toString(matingPool.size()), vec2(500,50));

@@ -13,7 +13,7 @@
 using namespace ci;
 using namespace std;
 
-void Dot::setup(vec2 start,vec2 end,ci::Color color){
+Dot::Dot(vec2 start,vec2 end,ci::Color color){
     mVelocity  = vec2(0,0);
     mDirection = vec2(0,0);
     mColor = color;

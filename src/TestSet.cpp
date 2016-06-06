@@ -33,36 +33,107 @@ void TestSet::setup(){
     
     emmitters.push_back(Emitter(vec2(451,100),f));
 
+    ci::Color c(1.0, 0.2, 0);
     
-    // left under
-    Dot d4;
-    d4.setup(vec2(184, 704), vec2(206, 868), ci::Color(1.0, 0.2, 0));
-    dots.push_back(d4);
+    float bottom = 873;
+    float top = 237;
+    float left = 207;
+    
+    //estra flap left
+    dots.push_back(Dot(vec2(32, 04),  vec2(354, bottom), c));
+    dots.push_back(Dot(vec2(284, 104),   vec2(354, 591), c));
+    dots.push_back(Dot(vec2(384, 84),   vec2(372, 611), c));
 
-    // top left
-    Dot d1;
-    d1.setup(vec2(304,704), vec2(208,238), ci::Color(0, 1, 1));
-    dots.push_back(d1);
+    dots.push_back(Dot(vec2(652, 104),  vec2(372, 748), c));
+    dots.push_back(Dot(vec2(452, 144),  vec2(520, 748), c));
+    dots.push_back(Dot(vec2(184, 204),   vec2(520, 611), c));
 
+    dots.push_back(Dot(vec2(284, 204),   vec2(540, 591), c));
+    dots.push_back(Dot(vec2(352, 304),  vec2(540, bottom), c));
+
+    // right under
+    dots.push_back(Dot(vec2(500, 507),  vec2(687, bottom), c));
+    
+    // right top
+    dots.push_back(Dot(vec2(670, 107),  vec2(687, top), c));
+    
     // middle
-    Dot d3;
-    d3.setup(vec2(420,704), vec2(446, 478), ci::Color(0.5, 1, 0));
-    dots.push_back(d3);
-    
-    //top right
-	Dot d2;
-	d2.setup(vec2(637, 704), vec2(686, 240), ci::Color(0, 0, 1));
-	dots.push_back(d2);
+    dots.push_back(Dot(vec2(660, 107),  vec2(446, 478), c));
 
-    // bottom right
-	Dot d5;
-	d5.setup(vec2(690, 704), vec2(691, 872), ci::Color(1.0, 0.5, 0.3));
-	dots.push_back(d5);
+
+    // left top
+    dots.push_back(Dot(vec2(520, 107),  vec2(left, top), c));
+    
+    // left bottom
+    dots.push_back(Dot(vec2(550, 107),  vec2(left, bottom), c));
 
     
-    
+    //    dots.push_back(Dot(vec2(352, 304),  vec2(520, 748), c));
+    //    dots.push_back(Dot(vec2(84, 504),   vec2(520, 611), c));
+    //    dots.push_back(Dot(vec2(84, 504),   vec2(542, 591), c));
 
+   // dots.push_back(Dot(vec2(194, 604),  vec2(358, bottom), c));
+    
+    
+//    //left under
+//    dots.push_back(Dot(vec2(182, 704),  vec2(182, bottom), c));
+//    
+//    //top left
+//    dots.push_back(Dot(vec2(304,704),   vec2(208,238), c));
+//    
+//    // middle
+//    dots.push_back(Dot(vec2(420,704),   vec2(446, 478), c));
+//    
+//    // top right
+//    dots.push_back(Dot(vec2(637, 704),  vec2(686, 240), c));
+//    
+//    // top right
+//    dots.push_back(Dot(vec2(690, 704),  vec2(691, 872), c));
+//    
+//    
+//    //estra flap right
+
+    
+//
+//    // left under2
+//    Dot d4;
+//    d4.setup(vec2(84, 604), vec2(358, 748), ci::Color(1.0, 0.2, 0));
+//    dots.push_back(d4);
+//    
+//
+//    
+//    // left underup1
+//    Dot d42;
+//    d42.setup(vec2(194, 604), vec2(358, 870), ci::Color(1.0, 0.2, 0));
+//    dots.push_back(d42);
+//
+//
+//    // left under
+//    Dot d41;
+//    d41.setup(vec2(184, 704), vec2(206, 868), ci::Color(1.0, 0.2, 0));
+//    dots.push_back(d41);
+//
+//    // top left
+//    Dot d1;
+//    d1.setup(vec2(304,704), vec2(208,238), ci::Color(0, 1, 1));
+//    dots.push_back(d1);
+//
+//    // middle
+//    Dot d3;
+//    d3.setup(vec2(420,704), vec2(446, 478), ci::Color(0.5, 1, 0));
+//    dots.push_back(d3);
+//    
+//    //top right
+//	Dot d2;
+//	d2.setup(vec2(637, 704), vec2(686, 240), ci::Color(0, 0, 1));
+//	dots.push_back(d2);
+//
+//    // bottom right
+//	Dot d5;
+//	d5.setup(vec2(690, 704), vec2(691, 872), ci::Color(1.0, 0.5, 0.3));
+//	dots.push_back(d5);
 }
+
 
 
 void TestSet::setNewData(EmitterData e){
