@@ -242,12 +242,18 @@ void TestSet::drawEmitters(std::shared_ptr<ci::nvg::Context> nvgContext){
     for(auto& e : emmitters){
         
         
+        bool toggle = true;
         for(float f=0; f < e.mForce; f+= 26.0){
             vg.beginPath();
 
+            if(toggle){
             vg.strokeColor(ColorAf{.0f, .8f, .9f});
-
-            float s = lmap<float>(f, 0, e.mForce, 40, 1);
+            }else{
+            vg.strokeColor(ColorAf{.0f, 7.0f, 1.f});
+            }
+            toggle = !toggle;
+            
+            float s = lmap<float>(f, 0, e.mForce, 26, 1);
             if(s < 0) s =1;
             vg.strokeWidth(s);
 
@@ -266,45 +272,77 @@ void TestSet::drawConnections(std::shared_ptr<ci::nvg::Context> nvgContext,float
     
     auto& vg = *nvgContext;
 
-    vg.beginPath();
 
-    for(int i = 1; i < dots.size(); ++i){
-        
-
-//        vg.strokeWidth(width);
-//        vg.beginPath();
-//
-//        vg.arc(dots[i].mTargetPosition , 10 ,0, (M_PI * 2), NVG_CW);
-//        vg.stroke();
-//
-
-//        vec2 norm = glm::normalize(dots[i].mPosition - dots[i-1].mPosition);
-//        vg.moveTo(dots[i-1].mPosition + (norm * 20.0f));
-//        vg.lineTo(dots[i].mPosition - (norm * 20.0f));
-
-
-        vg.moveTo(dots[i-1].mPosition );
-        vg.lineTo(dots[i].mPosition );
-
-//
-//
-//        norm = glm::normalize(dots[i].mPosition - dots[i].mTargetPosition);
-//
-//        vg.beginPath();
-//        
-//        vg.strokeWidth(1);
-//        
-//        vg.moveTo(dots[i].mPosition - (norm * 20.0f));
-//        vg.lineTo(dots[i].mTargetPosition + (norm * 20.0f));
-//        
-//        vg.stroke();
-//
-
-    }
-    vg.closePath();
     
-    vg.stroke();
-    vg.fill();
+//    vg.strokeWidth(width);
+//    
+//    vg.beginPath();
+//    
+//    for(int i = 0; i <= dots.size(); ++i){
+//        
+//        int pos1 = i % dots.size();
+//        int pos2 = (i+1) % dots.size();
+//        
+//        vec2 norm = glm::normalize(dots[pos1].mPosition - dots[pos2].mPosition);
+//        vg.moveTo(dots[pos1].mPosition - (norm * 20.0f));
+//        vg.lineTo(dots[pos2].mPosition + (norm * 20.0f));
+//
+//    }
+//    
+//    vg.closePath();
+//    vg.stroke();
+    
+    
+    
+   // vg.beginPath();
+    
+    
+    
+    for(int i = 0; i <= dots.size(); ++i){
+        
+        int pos1 = i % dots.size();
+        int pos2 = (i+1) % dots.size();
+        
+//        vg.strokeWidth(10);
+//        vg.strokeColor(ColorA(0,0,0.8,0.9));
+//
+//        vg.beginPath();
+//        vg.arc(dots[pos1].mTargetPosition , 14, 0.f,  M_PI * 2.0f, NVG_CW);
+//        vg.closePath();
+//        vg.stroke();
+
+        
+        
+        vg.strokeColor(ColorA(1,1,1,1));
+
+        vg.beginPath();
+        vg.strokeWidth(10);
+
+
+        vec2 div = dots[pos2].mPosition - dots[pos1].mPosition;
+        vec2 norm = glm::normalize(div);
+        float length = glm::length(div);
+        
+        
+        for (float i = 24; i < length-24; i+=14) {
+            vg.moveTo(dots[pos1].mPosition + (norm * i));
+            vg.lineTo(dots[pos1].mPosition + (norm * (i+4)));
+   
+        }
+        
+        
+//        vg.moveTo(dots[pos1].mPosition - (norm * 20.0f));
+//        vg.lineTo(dots[pos1].mTargetPosition + (norm * 20.0f));
+
+    //    vg.closePath();
+        vg.stroke();
+
+        
+    }
+    
+
+    
+
 
 
     

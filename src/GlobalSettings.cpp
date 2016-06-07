@@ -27,7 +27,7 @@ GlobalSettings::GlobalSettings(){
     isReplay                = false;
     mutation                = 0.0006;
     noDraw                  = false;
-    testSetMax              = 25;
+    testSetMax              = 225;
 }
 
 

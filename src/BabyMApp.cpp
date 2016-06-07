@@ -143,7 +143,7 @@ void BabyMApp::setup()
     
     start();
     
-    while(isRunning && GS()->noDraw){
+    while(isRunning && GS()->noDraw && recordDistance > 200){
         update();
     }
 
@@ -375,16 +375,16 @@ void BabyMApp::draw()
     // Store a reference so we can use dot-notation.
     auto& vg = *mNanoVG;
 
-    for(int s : shadows){
-            
-        vg.strokeColor(Color{.8f, .8f, .8f});
-       // testSets[s].drawConnections(mNanoVG,0.8);
-
-        vg.strokeWidth(2);
-        vg.strokeColor(Color(1,1,1));
-
-        testSets[s].drawDots(mNanoVG, 4);
-    }
+//    for(int s : shadows){
+//            
+//        vg.strokeColor(Color{.8f, .8f, .8f});
+//       // testSets[s].drawConnections(mNanoVG,0.8);
+//
+//        vg.strokeWidth(2);
+//        vg.strokeColor(Color(1,1,1));
+//
+//        testSets[s].drawDots(mNanoVG, 4);
+//    }
     
     
     
