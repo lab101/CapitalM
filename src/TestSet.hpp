@@ -19,7 +19,7 @@
 #include "ci_nanovg_gl.hpp"
 
 class TestSet{
-
+    
 public:
     //std::vector<std::vector<float> > mData;
     EmitterData emmitterData;
@@ -29,7 +29,7 @@ public:
     
     std::vector<Emitter> emmitters;
     std::vector<Dot> dots;
-
+    
     void randomize(int frames,int rndIndex);
     void setup();
     void update(cinder::vec2& gravity);
@@ -40,6 +40,7 @@ public:
     void setNewData(EmitterData e);
     void applyForces(Dot& d,int dataIndex);
     void checkBounderies(Dot& d);
+    bool checkTarget(Dot& d);
     void limitSpeed(Dot& d);
     void addDot(ci::vec2 start,ci::vec2 target);
     
