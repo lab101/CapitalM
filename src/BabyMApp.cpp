@@ -38,12 +38,10 @@ public:
     
     int getTotalHits();
     float getMaxFitness();
-	long double getTotalFitness();
 	int getRecordDistance();
 	void  newSelection();
 	bool lock;
 
-    long double totalFitness;
 	int recordDistance = 10000;
     
     int frames;
@@ -57,12 +55,12 @@ public:
 	TestSet* bestSet;
     params::InterfaceGlRef	mParams;
 
-    vector<int> shadows;
+    vector<int>             shadows;
     
-    gl::TextureRef  building;
+    gl::TextureRef          building;
     
-    vector<EmitterData> emmiterDataCopy;
-    vector<EmitterData*> matingPool;
+    vector<EmitterData>     emmiterDataCopy;
+    vector<EmitterData*>    matingPool;
     
     ci::vec2 mousePos;
     
@@ -143,7 +141,7 @@ void BabyMApp::setup()
     
     start();
     
-    while(isRunning && GS()->noDraw){
+    while((isRunning && GS()->noDraw) && recordDistance > 300){
         update();
     }
 
@@ -252,10 +250,6 @@ void BabyMApp::update()
     if(isRunning){
 
         ++frames;
-        
-//        if(frames % 100){
-//                std::cout  << ".." << frames << "..";
-//        }
 
         if(frames == maxFrames){
             
@@ -329,14 +323,6 @@ float BabyMApp::getMaxFitness(){
 }
 
 
-long double BabyMApp::getTotalFitness(){
-    long double fit = 0;
-    for(auto& t : testSets){
-        fit += t.fitness;
-    }
-    
-    return fit;
-}
 
 
 int BabyMApp::getTotalHits(){

@@ -25,9 +25,9 @@ GlobalSettings::GlobalSettings(){
     gravity                 = vec2(0,0.06);
     lerpBallVelocity        = 0.02;
     isReplay                = false;
-    mutation                = 0.0006;
+    mutation                = 0.008;
     noDraw                  = true;
-    testSetMax              = 150000;
+    testSetMax              = 422;
 }
 
 

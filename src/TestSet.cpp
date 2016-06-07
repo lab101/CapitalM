@@ -240,19 +240,6 @@ void TestSet::limitSpeed(Dot& dot){
 }
 
 
-bool TestSet::checkTarget(Dot& dot){
-
-	/*  float distance = glm::distance(dot.mPosition, dot.mTargetPosition);
-
-	  if(distance < dot.recordDistance){
-	  dot.recordDistance = distance;
-	  }
-
-
-	  return (distance < 20);    */
-	return 0;
-}
-
 
 void TestSet::checkBounderies(Dot& dot){
     
@@ -331,14 +318,19 @@ void TestSet::drawConnections(std::shared_ptr<ci::nvg::Context> nvgContext,float
     auto& vg = *nvgContext;
     vg.strokeWidth(width);
 
-    vg.beginPath();
+   vg.beginPath();
     
-    for(int i = 1; i < dots.size(); ++i){
-        vec2 norm = glm::normalize(dots[i].mPosition - dots[i-1].mPosition);
-        vg.moveTo(dots[i-1].mPosition + (norm * 20.0f));
-        vg.lineTo(dots[i].mPosition - (norm * 20.0f));
+    for(int i = 0; i <= dots.size(); ++i){
+        
+        int pos1 = i % dots.size();
+        int pos2 = (i+1) % dots.size();
+        
+        vec2 norm = glm::normalize(dots[pos1].mPosition - dots[pos2].mPosition);
+        vg.moveTo(dots[pos1].mPosition - (norm * 20.0f));
+        vg.lineTo(dots[pos2].mPosition + (norm * 20.0f));
     }
     
+    vg.closePath();
     vg.stroke();
 
     

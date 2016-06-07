@@ -40,7 +40,6 @@ public:
     void setNewData(EmitterData e);
     void applyForces(Dot& d,int dataIndex);
     void checkBounderies(Dot& d);
-    bool checkTarget(Dot& d);
     void limitSpeed(Dot& d);
     void addDot(ci::vec2 start,ci::vec2 target);
     
