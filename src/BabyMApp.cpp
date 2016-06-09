@@ -49,7 +49,6 @@ public:
 	int recordDistance = 10000;
     
     int frames          = 0;
-    int maxFrames       = 1050;
     int generations     = 0;
     int testSetsAmount;
     int totalHits       = 0;
@@ -108,7 +107,7 @@ void BabyMApp::setup()
             testSets.back().readData(GS()->replayFile);
           //  shadows.push_back(i);
         }else{
-            testSets[i].randomize(maxFrames,i);
+            testSets[i].randomize(GS()->maxFrames,i);
         }
     }
 
@@ -238,11 +237,15 @@ void BabyMApp::updateForGeneration(){
         ++frames;
         
         // LAST FRAME STOP THE TEST.
-        if(frames == maxFrames){
+        if(frames == GS()->maxFrames){
             
             stop();
             
-            std::cout << "\nGEN:" << generations << "\t\tDIST: " << recordDistance << "\t\tSELECTION pool size:" << matingPool.size() << "population \t" << testSetsAmount<<  endl;
+            cout << "\nGEN:" << generations;
+            cout << "\t\tDIST: " << recordDistance;
+            cout << "\t\tSELECTION pool size:" << matingPool.size();
+            cout << "\t\tframes: " << GS()->maxFrames;
+            cout << "\t\tpopulation \t" << testSetsAmount <<  endl;
             
             newSelection();
             start();
@@ -287,7 +290,7 @@ void BabyMApp::updateForReplay(){
         ++frames;
         
         // LAST FRAME STOP THE TEST.
-        if(frames == maxFrames){
+        if(frames == GS()->maxFrames){
             stop();
         }
         
@@ -355,10 +358,9 @@ int BabyMApp::getRecordDistance(){
 void BabyMApp::draw()
 {
     gl::clear( Color( 0, 0, 0 ) );
-
     
-    gl::color(0.5, 0.5, 0.5);
-    //gl::draw(building);
+    gl::color(0.1, 0.1, 0.1);
+    gl::draw(building);
     gl::color(1, 1, 1);
     
     if(!GS()->isBackgroundDrawingOff){
@@ -367,26 +369,8 @@ void BabyMApp::draw()
     // Store a reference so we can use dot-notation.
     auto& vg = *mNanoVG;
 
-//    for(int s : shadows){
-//            
-//        vg.strokeColor(Color{.8f, .8f, .8f});
-//       // testSets[s].drawConnections(mNanoVG,0.8);
-//
-//        vg.strokeWidth(2);
-//        vg.strokeColor(Color(1,1,1));
-//
-//        testSets[s].drawDots(mNanoVG, 4);
-//    }
-    
-    
-    
-
 	if (bestSet != nullptr){
         
-        
-        Color bestColor = Color(244  / 255.0f, 1.f, .5f);
-
-        vg.strokeColor(bestColor);
         bestSet->drawConnections(mNanoVG,bestSet->dots,4);
         bestSet->drawConnections(mNanoVG,bestSet->dots2,4);
        
@@ -394,11 +378,7 @@ void BabyMApp::draw()
         bestSet->drawDots(mNanoVG,bestSet->dots2,4);
         
         bestSet->drawEmitters(mNanoVG);
-       // bestSet->draw(mNanoVG);
-
-        
    	}
-    
     
     gl::color(1, 1, 1);
 
@@ -416,7 +396,8 @@ void BabyMApp::draw()
 //    gl::disableAlphaBlending();
 //    gl::disableBlending();
    // gl::enableAlphaBlendingPremult();
-  //  gl::enableAlphaBlendingPremult();
+    gl::enableAlphaBlending();
+    gl::enableAlphaBlendingPremult();
     
     gl::drawString("pool size \t" + toString(matingPool.size()), vec2(offs, 35));
     gl::drawString("mutation \t" + toString(GS()->mutation), vec2(offs,50));
@@ -428,6 +409,7 @@ void BabyMApp::draw()
 	TextRenderSingleton::Instance()->renderText("GEN #" + toString(generations), vec2(offs , 140));
     TextRenderSingleton::Instance()->renderText("DIST #" + toString(recordDistance), vec2(offs , 170));
     TextRenderSingleton::Instance()->renderText("FRAME #" + toString(bestSet->lifeTime), vec2(offs , 200));
+    TextRenderSingleton::Instance()->renderText("TIME #" + toString(ci::app::getElapsedSeconds()), vec2(offs , 230));
     
     
     // Draw the interface

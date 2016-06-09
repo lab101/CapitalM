@@ -167,6 +167,12 @@ float TestSet::updateDots(std::vector<Dot>& dots,const ci::vec2& gravity){
         combinedDistance += distance;
         
         d.isHitTarget = distance < GS()->lockLimit;
+        
+        // snap when in replay
+        if(d.isHitTarget && GS()->isReplay){
+            d.mPosition = d.mTargetPosition;
+        }
+        
         isHitAllTargets *= d.isHitTarget;
         limitSpeed(d);
         
@@ -359,14 +365,14 @@ void TestSet::drawDots(std::shared_ptr<ci::nvg::Context> nvgContext,vector<Dot>&
     for(auto& d : dots){
         
         hue += 0.04;
-        c = ci::hsvToRgb(vec3(hue,.8,0.8));
+        c = ci::hsvToRgb(vec3(hue,.8,1));
         // float s = lmap<float>(d.getSpeed(), 0, 6, 0, 20);
         vg.beginPath();
         vg.strokeWidth(4);
         
         vg.fillColor(c);
         vg.strokeColor(c);
-        vg.fillColor(ColorAf{CM_HSV, hue, 1.0f, 1.0f});
+        vg.fillColor(ColorAf{CM_HSV, hue, .4f, 1.0f});
         
         vg.arc(d.mPosition , 6, -M_PI * 0.5f,  M_PI * 2.0f, NVG_CW);
         vg.closePath();

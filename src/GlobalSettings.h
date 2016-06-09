@@ -31,6 +31,8 @@ public:
     float     mutation;
     bool      noDraw;
     int       testSetMax;
+    int maxFrames ;
+
     
     std::string replayFile;
     

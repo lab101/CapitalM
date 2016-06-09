@@ -28,18 +28,20 @@ GlobalSettings::GlobalSettings(){
     mutation                = 0.0003;
     noDraw                  = false;
     testSetMax              = 200;
-    lockLimit               = 10;
+    lockLimit               = 6;
+    maxFrames               = 610;
 
-    // console run.
-    noDraw                  = true;
-    testSetMax              = 9200;
+
+//    // console run.
+  //  noDraw                  = true;
+   // testSetMax              = 9200;
 
     
      //replay
-//    isReplay                = true;
-//    testSetMax              = 1;
-//
-//    replayFile = "_s0_emmitterData0.csv";
+    isReplay                = true;
+    testSetMax              = 1;
+
+    replayFile = "_s166_emmitterData0.csv";
 
     
 }

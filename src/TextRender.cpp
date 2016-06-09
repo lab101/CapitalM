@@ -51,6 +51,7 @@ void TextRender::renderText(std::string txt, ci::ivec2 position,float maxWidth){
   //  gl::color( ColorA( 1, 0.5f, 0.25f, 1.0f ) );
 
     ci::gl::color(1, 1, 1);
+    
     mTextureFont->drawString(txt, position);
 
 }
