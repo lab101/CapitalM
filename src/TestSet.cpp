@@ -38,6 +38,9 @@ void TestSet::setup(){
     float bottom = 873;
     float top = 237;
     float left = 207;
+    float right = 687;
+    
+    // INNER M
     
     //estra flap left
     dots.push_back(Dot(vec2(32, 04),  vec2(354, bottom), c));
@@ -52,10 +55,10 @@ void TestSet::setup(){
     dots.push_back(Dot(vec2(352, 304),  vec2(540, bottom), c));
     
     // right under
-    dots.push_back(Dot(vec2(500, 507),  vec2(687, bottom), c));
+    dots.push_back(Dot(vec2(500, 507),  vec2(right, bottom), c));
     
     // right top
-    dots.push_back(Dot(vec2(670, 107),  vec2(687, top), c));
+    dots.push_back(Dot(vec2(670, 107),  vec2(right, top), c));
     
     // middle
     dots.push_back(Dot(vec2(660, 107),  vec2(446, 478), c));
@@ -66,6 +69,25 @@ void TestSet::setup(){
     
     // left bottom
     dots.push_back(Dot(vec2(550, 107),  vec2(left, bottom), c));
+    
+    
+    //OUTER M
+    
+    left = 182;
+    top = 178;
+    right = 711;
+    // left bottom
+    dots2.push_back(Dot(vec2(200, 107),  vec2(left, bottom), c));
+    // left top
+    dots2.push_back(Dot(vec2(524, 100),  vec2(left, top), c));
+    // middle
+    dots2.push_back(Dot(vec2(660, 107),  vec2(446, 444), c));
+    // right top
+    dots2.push_back(Dot(vec2(670, 107),  vec2(right, top), c));
+    // right under
+    dots2.push_back(Dot(vec2(500, 507),  vec2(right, bottom), c));
+
+    
     
     
 }
@@ -92,7 +114,7 @@ vec2 vLerp(vec2 p1,vec2 p2,float v){
 void TestSet::start(){
     
     isRunning = true;
-    isHitTarget = false;
+    isHitAllTargets = false;
     lifeTime = 0;
     recordDistance = 10000;
     
@@ -100,6 +122,12 @@ void TestSet::start(){
         d.resetForces();
         d.resetPosition();
     }
+    
+    for (auto& d : dots2){
+        d.resetForces();
+        d.resetPosition();
+    }
+
     
     for(auto&e : emmitters){
         e.reset();
@@ -113,9 +141,45 @@ void TestSet::start(){
 
 void TestSet::stop(){
     isRunning = false;
-    calcuclateFitnessScore();
+    calculateFitness();
 }
 
+
+void TestSet::updateEmitters(bool cooldown){
+    for(int i = 0; i < emmitters.size();++i){
+        
+        Emitter* e = &emmitters[i];
+        e->mTargetForce = cooldown ?  0 : emmitterData.data[lifeTime][i];
+        e->update();
+    }
+}
+
+
+float TestSet::updateDots(std::vector<Dot>& dots,const ci::vec2& gravity){
+    float combinedDistance = 0;
+
+    for(auto& d : dots){
+        checkBounderies(d);
+        applyForces(d,0);
+        
+        
+        float distance = glm::distance(d.mPosition, d.mTargetPosition);
+        combinedDistance += distance;
+        
+        d.isHitTarget = distance < GS()->lockLimit;
+        isHitAllTargets *= d.isHitTarget;
+        limitSpeed(d);
+        
+        d.mVelocity = vLerp(d.mVelocity, vec2(0,0), GS()->lerpBallVelocity);
+        d.mDirection = vLerp(d.mDirection, gravity, 0.1);
+        
+        d.update();
+    }
+    
+    
+    return combinedDistance;
+
+}
 
 
 
@@ -125,40 +189,16 @@ void TestSet::update(vec2& gravity){
     if(!isRunning) return;
     
     
-    
-    isHitTarget = true;
+    isHitAllTargets = true;
     float combinedDistance = 0;
     
     
-    for(int i = 0; i < emmitters.size();++i){
-        
-        Emitter* e = &emmitters[i];
-        e->mTargetForce = emmitterData.data[lifeTime][i];
-        e->update();
-    }
-    
-    
-    for(auto& d : dots){
-        checkBounderies(d);
-        applyForces(d,0);
-        
-        
-        float distance = glm::distance(d.mPosition, d.mTargetPosition);
-        combinedDistance += distance;
-        
-        
-        isHitTarget *= distance < 14;
-        limitSpeed(d);
-        
-        d.mVelocity = vLerp(d.mVelocity, vec2(0,0), GS()->lerpBallVelocity);
-        d.mDirection = vLerp(d.mDirection, gravity, 0.1);
-        
-        d.update();
-    }
+    combinedDistance += updateDots(dots, gravity);
+    combinedDistance += updateDots(dots2, gravity);
     
     if (combinedDistance < recordDistance) recordDistance = combinedDistance;
     
-    if(isHitTarget) stop();
+    if(isHitAllTargets) stop();
     
     
     ++lifeTime;
@@ -177,15 +217,6 @@ void TestSet::limitSpeed(Dot& dot){
 
 
 bool TestSet::checkTarget(Dot& dot){
-    
-    /*  float distance = glm::distance(dot.mPosition, dot.mTargetPosition);
-     
-     if(distance < dot.recordDistance){
-     dot.recordDistance = distance;
-     }
-     
-     
-     return (distance < 20);    */
     return 0;
 }
 
@@ -242,16 +273,24 @@ void TestSet::drawEmitters(std::shared_ptr<ci::nvg::Context> nvgContext){
     for(auto& e : emmitters){
         
         
-        bool toggle = true;
+      //  bool toggle = true;
         for(float f=0; f < e.mForce; f+= 26.0){
             vg.beginPath();
             
-            if(toggle){
-                vg.strokeColor(ColorAf{.0f, .8f, .9f});
-            }else{
-                vg.strokeColor(ColorAf{.0f, 7.0f, 1.f});
-            }
-            toggle = !toggle;
+//            if(toggle){
+//                vg.strokeColor(ColorAf{.0f, .8f, .9f});
+//            }else{
+//                vg.strokeColor(ColorAf{.0f, 7.0f, 1.f});
+//            }
+            
+            
+            
+            float c = lmap<float>(f, 0, e.mForce, 0.5, 0.1);
+            if(c < 0) c =0;
+
+            vg.strokeColor(ColorAf{CM_HSV, c, .7f, 1.0f});
+
+//            toggle = !toggle;
             
             float s = lmap<float>(f, 0, e.mForce, 26, 1);
             if(s < 0) s =1;
@@ -262,13 +301,14 @@ void TestSet::drawEmitters(std::shared_ptr<ci::nvg::Context> nvgContext){
             vg.stroke();
             
             
+            
         }
     }
 }
 
 
 
-void TestSet::drawConnections(std::shared_ptr<ci::nvg::Context> nvgContext,float width){
+void TestSet::drawConnections(std::shared_ptr<ci::nvg::Context> nvgContext,vector<Dot>& dots, float width){
     
     auto& vg = *nvgContext;
     
@@ -278,11 +318,10 @@ void TestSet::drawConnections(std::shared_ptr<ci::nvg::Context> nvgContext,float
         int pos1 = i % dots.size();
         int pos2 = (i+1) % dots.size();
         
-        
         vg.strokeColor(ColorA(1,1,1,1));
         
         vg.beginPath();
-        vg.strokeWidth(10);
+        vg.strokeWidth(4);
         
         
         vec2 div = dots[pos2].mPosition - dots[pos1].mPosition;
@@ -290,7 +329,13 @@ void TestSet::drawConnections(std::shared_ptr<ci::nvg::Context> nvgContext,float
         float length = glm::length(div);
         
         
-        for (float i = 24; i < length-24; i+=14) {
+        for (float i = 24; i < length-24; i+=8) {
+            
+            float c = lmap<float>(i, 0, length, 1.0, 0.1);
+            if(c < 0) c =0;
+            
+            vg.strokeColor(ColorAf{CM_HSV, 0.2, c, .8f});
+
             vg.moveTo(dots[pos1].mPosition + (norm * i));
             vg.lineTo(dots[pos1].mPosition + (norm * (i+4)));
             
@@ -305,14 +350,32 @@ void TestSet::drawConnections(std::shared_ptr<ci::nvg::Context> nvgContext,float
 
 
 
-void TestSet::drawDots(std::shared_ptr<ci::nvg::Context> nvgContext,float radius){
+void TestSet::drawDots(std::shared_ptr<ci::nvg::Context> nvgContext,vector<Dot>& dots,float radius){
     auto& vg = *nvgContext;
     
-    //draw dots
-    for(int i = 0; i < dots.size(); ++i){
+    float hue = 0;
+    
+    Color c;
+    for(auto& d : dots){
+        
+        hue += 0.04;
+        c = ci::hsvToRgb(vec3(hue,.8,0.8));
+        // float s = lmap<float>(d.getSpeed(), 0, 6, 0, 20);
+        vg.beginPath();
+        vg.strokeWidth(4);
+        
+        vg.fillColor(c);
+        vg.strokeColor(c);
+        vg.fillColor(ColorAf{CM_HSV, hue, 1.0f, 1.0f});
+        
+        vg.arc(d.mPosition , 6, -M_PI * 0.5f,  M_PI * 2.0f, NVG_CW);
+        vg.closePath();
+        vg.stroke();
+        
         
         vg.beginPath();
-        vg.arc(dots[i].mPosition , 4, -M_PI * 0.5f,  M_PI * 2.0f, NVG_CW);
+        
+        vg.arc(d.mTargetPosition , 6, -M_PI * 0.5f,  M_PI * 2.0f, NVG_CW);
         vg.closePath();
         vg.stroke();
     }
@@ -346,25 +409,12 @@ void TestSet::randomize(int frames,int rndIndex){
 
 
 
-long double TestSet::calcuclateFitnessScore(){
-    fitness= 0;
-    // for(auto&d :dots){
-    //    if (d.recordDistance < 1) d.recordDistance = 1;
-    
-    // Reward finishing faster and getting close
-    //lifeTime *= 0.1;
+long double TestSet::calculateFitness(){
     fitness = (1.0f/(recordDistance*lifeTime));
-    
-    
-    //if (hitObstacle) fitness *= 0.1; // lose 90% of fitness hitting an obstacle
-    //  }
     
     // Make the function exponential
     fitness = pow(fitness, 4);
-    
-    //fitness *= 0.01;
-    
-    if (isHitTarget) fitness *= 2.0; // twice the fitness for finishing!
+    if (isHitAllTargets) fitness *= 2.0; // twice the fitness for finishing!
     
     return fitness;
 }
@@ -396,10 +446,6 @@ void TestSet::readData(std::string fileName){
         }
         dataFile.close();
     }
-    
-    
-    
-    
     
 }
 

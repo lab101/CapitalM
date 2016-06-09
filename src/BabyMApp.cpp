@@ -31,6 +31,10 @@ public:
     void keyDown( KeyEvent event ) override;
     
 	void update() override;
+    
+    void updateForGeneration();
+    void updateForReplay();
+    
 	void draw() override;
     
     void start();
@@ -44,7 +48,7 @@ public:
 
 	int recordDistance = 10000;
     
-    int frames;
+    int frames          = 0;
     int maxFrames       = 1050;
     int generations     = 0;
     int testSetsAmount;
@@ -71,32 +75,22 @@ void BabyMApp::setup()
 {
     
     //string replayFile = "emmitterData8066.csv";
-    string replayFile = "run1/emmitterData34096.csv";
     
     
     mNanoVG = std::make_shared<nvg::Context>(nvg::createContextGL());
+    testSetsAmount = GS()->testSetMax;
 
-    if(GS()->isReplay){
-        testSetsAmount = 10;
-        lock = true;
-     
-    }else{
-        testSetsAmount = GS()->testSetMax;
-        lock = true;
+   lock = true;
         
-        int offset = testSetsAmount /10;
-        for (int i =0; i < testSetsAmount; i+=offset) {
-            shadows.push_back(i);
-        }
-        
-
-    }
-    
+//        int offset = testSetsAmount /10;
+//        for (int i =0; i < testSetsAmount; i+=offset) {
+//            shadows.push_back(i);
+//        }
     
     
     setWindowPos(10, 10);
     
-    building = gl::Texture::create(loadImage(loadAsset("building.jpg")));
+    building = gl::Texture::create(loadImage(loadAsset("building2.png")));
     
     
     testSets.reserve(testSetsAmount);
@@ -104,7 +98,6 @@ void BabyMApp::setup()
     emmiterDataCopy.assign(testSetsAmount, EmitterData());
     
     GS()->mScreen.set(0, 0, building->getWidth(), building->getHeight());
-    // GS()->mScreen.set(0, 0, 800, 600);
     setWindowSize(GS()->mScreen.getWidth() + 300, GS()->mScreen.getHeight());
 
     for(int i=0; i < testSetsAmount;++i){
@@ -112,8 +105,8 @@ void BabyMApp::setup()
         testSets[i].setup();
         
         if(GS()->isReplay){
-            testSets.back().readData("run3/_s"+ toString(i)+ "_emmitterData2081.csv");
-            shadows.push_back(i);
+            testSets.back().readData(GS()->replayFile);
+          //  shadows.push_back(i);
         }else{
             testSets[i].randomize(maxFrames,i);
         }
@@ -141,7 +134,7 @@ void BabyMApp::setup()
     
     start();
     
-    while(isRunning && GS()->noDraw && recordDistance > 200){
+    while(isRunning && GS()->noDraw && recordDistance > 40){
         update();
     }
 
@@ -153,7 +146,6 @@ void BabyMApp::newSelection(){
     float maxFitness = getMaxFitness();
     
     matingPool.clear();
-    //emmiterDataCopy.clear();
     
     for(int i =0; i < testSetsAmount; ++i)
     {
@@ -170,12 +162,10 @@ void BabyMApp::newSelection(){
     
     
     
-    // Refill the population with children from the mating pool
     for (int i = 0; i < testSets.size(); i++) {
-        // Sping the wheel of fortune to pick two parents
         int m = int(randInt(matingPool.size()));
         int d = int(randInt(matingPool.size()));
-        // Pick two parents
+
         EmitterData mom = *matingPool.at(m);
         EmitterData dad = *matingPool.at(d);
 
@@ -187,9 +177,9 @@ void BabyMApp::newSelection(){
     }
     
     generations++;
-
-
 }
+
+
 
 void BabyMApp::start(){
     frames = 0;
@@ -241,73 +231,89 @@ void BabyMApp::keyDown( KeyEvent event ){
     }
 }
 
-
-
-
-void BabyMApp::update()
-{
-
+void BabyMApp::updateForGeneration(){
+    
     if(isRunning){
-
+        
         ++frames;
-
+        
+        // LAST FRAME STOP THE TEST.
         if(frames == maxFrames){
             
             stop();
             
             std::cout << "\nGEN:" << generations << "\t\tDIST: " << recordDistance << "\t\tSELECTION pool size:" << matingPool.size() << "population \t" << testSetsAmount<<  endl;
-
             
-            if(getTotalHits() > 0 && lock){
-                isRunning = false;
+            newSelection();
+            start();
+        }
+        
+        // UPDATE AND SELECT FITTEST
+        int lowestDistance = 10000;
+        for (auto& t : testSets){
+            
+            // update test sets
+            t.updateEmitters(false);
+            t.update(GS()->gravity);
+            
+            // check for the set with the smallest distance.
+            if (t.recordDistance < lowestDistance){
+                lowestDistance = t.recordDistance;
+                bestSet = &t;
+            }
+            
+            
+            if(t.isHitAllTargets && lock ){
                 
-            }else{
-                newSelection();
-                start();
+                std::cout << "\nFOUND ONE AT gen " << generations << " : distance" << recordDistance << endl;
+                
+                
+                string fileName = "_s" + toString(generations) + "_emmitterData" + toString(getElapsedFrames()) + ".csv";
+                t.dumpData(fileName );
+                
+                
+                stop();
+                return;
+                
             }
         }
-
-
-		int lowestDistance = 10000;
-		for (auto& t : testSets){
-			t.update(GS()->gravity);
-            
-			if (t.recordDistance < lowestDistance){
-				lowestDistance = t.recordDistance;
-				bestSet = &t;
-                
-			}
-            
-            
-            if(t.isHitTarget && lock ){
-
-                if(!GS()->isReplay){
-                    
-                    std::cout << "\nFOUND ONE AT gen " << generations << " : distance" << recordDistance << endl;
-
-                    int i=0;
-                    
-                    string fileName = "_s" + toString(i) + "_emmitterData" + toString(getElapsedFrames()) + ".csv";
-                    t.dumpData(fileName );
-                    
-                    for(int s : shadows){
-                        string fileName = "_s" + toString(++i) + "_emmitterData" + toString(getElapsedFrames()) + ".csv";
-                        testSets[s].dumpData( fileName + ".csv");
-                    }
-                    
-                    stop();
-                    return;
-
-                }else{
-                    stop();
-                    return;
-                }
-                
-            }
-		}
-
-        
     }
+}
+
+
+void BabyMApp::updateForReplay(){
+    if(isRunning){
+        
+        ++frames;
+        
+        // LAST FRAME STOP THE TEST.
+        if(frames == maxFrames){
+            stop();
+        }
+        
+        
+        for (auto& t : testSets){
+            t.updateEmitters(false);
+            t.update(GS()->gravity);
+            
+            bestSet = &t;
+        }
+
+    }else{
+        GS()->lerpTargetForce=0.004;
+        GS()->lerpFalloffForce=0.005;
+        bestSet->updateEmitters(true);
+    }
+
+}
+
+
+
+void BabyMApp::update()
+{
+    if(GS()->isReplay) updateForReplay();
+    else updateForGeneration();
+  
 }
 
 
@@ -328,7 +334,7 @@ float BabyMApp::getMaxFitness(){
 int BabyMApp::getTotalHits(){
     int fit = 0;
     for(auto& t : testSets){
-        fit += t.isHitTarget;
+        fit += t.isHitAllTargets;
     }
     
     return fit;
@@ -352,7 +358,7 @@ void BabyMApp::draw()
 
     
     gl::color(0.5, 0.5, 0.5);
-    gl::draw(building);
+    //gl::draw(building);
     gl::color(1, 1, 1);
     
     if(!GS()->isBackgroundDrawingOff){
@@ -381,23 +387,17 @@ void BabyMApp::draw()
         Color bestColor = Color(244  / 255.0f, 1.f, .5f);
 
         vg.strokeColor(bestColor);
-        bestSet->drawConnections(mNanoVG,4);
+        bestSet->drawConnections(mNanoVG,bestSet->dots,4);
+        bestSet->drawConnections(mNanoVG,bestSet->dots2,4);
+       
+        bestSet->drawDots(mNanoVG,bestSet->dots,4);
+        bestSet->drawDots(mNanoVG,bestSet->dots2,4);
+        
         bestSet->drawEmitters(mNanoVG);
+       // bestSet->draw(mNanoVG);
 
-        for(auto& d : bestSet->dots){
-            
-           // float s = lmap<float>(d.getSpeed(), 0, 6, 0, 20);
-            vg.beginPath();
-            vg.strokeWidth(8);
-
-            vg.fillColor(Color(1,0,0));
-            vg.strokeColor(bestColor);
-
-            vg.arc(d.mPosition , 10, -M_PI * 0.5f,  M_PI * 2.0f, NVG_CW);
-            vg.closePath();
-            vg.stroke();
-        }
-	}
+        
+   	}
     
     
     gl::color(1, 1, 1);
@@ -413,8 +413,9 @@ void BabyMApp::draw()
     
     int offs = GS()->mScreen.x2 + 60;
     
-    gl::disableAlphaBlending();
-    gl::disableBlending();
+//    gl::disableAlphaBlending();
+//    gl::disableBlending();
+   // gl::enableAlphaBlendingPremult();
   //  gl::enableAlphaBlendingPremult();
     
     gl::drawString("pool size \t" + toString(matingPool.size()), vec2(offs, 35));
@@ -430,7 +431,7 @@ void BabyMApp::draw()
     
     
     // Draw the interface
-    mParams->draw();
+   // mParams->draw();
 
 
 }

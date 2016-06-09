@@ -22,6 +22,8 @@ public:
     float     lerpFalloffForce;
     float     lerpBallVelocity;
     
+    float     lockLimit;
+    
     float     maxSpeed;
     bool      isBackgroundDrawingOff;
     bool      isReplay;
@@ -29,6 +31,8 @@ public:
     float     mutation;
     bool      noDraw;
     int       testSetMax;
+    
+    std::string replayFile;
     
 	GlobalSettings();
     

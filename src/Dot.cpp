@@ -25,9 +25,10 @@ Dot::Dot(vec2 start,vec2 end,ci::Color color){
 
 
 void Dot::update(){
-    
-    mVelocity += mDirection;
-    mPosition += mVelocity;
+    if(!isHitTarget){
+        mVelocity += mDirection;
+        mPosition += mVelocity;
+    }
     
     
 }

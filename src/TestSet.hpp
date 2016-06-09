@@ -25,17 +25,23 @@ public:
     EmitterData emmitterData;
     
     bool isRunning;
-    bool isHitTarget;
+    bool isHitAllTargets;
     
     std::vector<Emitter> emmitters;
     std::vector<Dot> dots;
+    std::vector<Dot> dots2;
     
     void randomize(int frames,int rndIndex);
     void setup();
     void update(cinder::vec2& gravity);
-    void drawDots(std::shared_ptr<ci::nvg::Context> nvgContext,float radius);
+    
+    void updateEmitters(bool cooldown=false);
+    float updateDots(std::vector<Dot>& dots,const ci::vec2& gravity);
+    
+    
+    void drawDots(std::shared_ptr<ci::nvg::Context> nvgContext,std::vector<Dot>& dots,float radius);
     void drawEmitters(std::shared_ptr<ci::nvg::Context> nvgContext);
-    void drawConnections(std::shared_ptr<ci::nvg::Context> nvgContext,float width);
+    void drawConnections(std::shared_ptr<ci::nvg::Context> nvgContext,std::vector<Dot>& dots,float width);
     
     void setNewData(EmitterData e);
     void applyForces(Dot& d,int dataIndex);
@@ -48,12 +54,11 @@ public:
     void stop();
     
     int lifeTime;
-    int currentFrame;
     
     long double fitness = 0;
     float recordDistance = 1000;
     
-    long double calcuclateFitnessScore();
+    long double calculateFitness();
     
     void dumpData(std::string fileName);
     void readData(std::string fileName);
